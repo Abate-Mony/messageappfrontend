@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<form id="myForm">
+    <input type="text" value="hello" name="name">
+    <input type="file" name="file" id="file">
+    <button id="btn">send</button>
+</form>
+
+<body>
+    <script>
+        const btn = document.getElementById("btn")
+        btn.onclick = function(e) {
+            e.preventDefault()
+            sendData()
+        }
+
+        function sendData() {
+            const form = document.getElementById("myForm")
+            const xhr = new XMLHttpRequest()
+            const FD = new FormData(form)
+            console.log(FD)
+            xhr.onload = function(e) {
+
+            }
+            xhr.onerror = function(e) {
+                alert("fail to upload")
+                console.log("something happen")
+            }
+            xhr.open("POST", "http://localhost:5000/upload", true)
+            xhr.send(FD)
+        }
+    </script>
+</body>
+
+</html>
