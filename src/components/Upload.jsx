@@ -3,6 +3,7 @@ const Upload = ({ toggle, setToggle, sentTo, createdBy,getData }) => {
     const form = useRef(null)
     const handleSubmit = e => {
         e.preventDefault()
+        const socket=new WebSocket("ws://localhost:5000")
         const FD = form.current
         const formdata = new FormData(FD)
         formdata.append("sentTo", sentTo)
@@ -15,7 +16,7 @@ const Upload = ({ toggle, setToggle, sentTo, createdBy,getData }) => {
                 console.log(this.responseText)
                 setToggle(false)
                 getData()
-                formdata.set("file","")
+                socket.send(sentTo)
             } else {
                 // something is wrong here
                 console.log(this.responseText)
@@ -27,6 +28,7 @@ const Upload = ({ toggle, setToggle, sentTo, createdBy,getData }) => {
         xhr.open("POST",url,true)
         xhr.send(formdata)
     }
+
     return (
         <div className={`upload-container ${!toggle && "--d-none"}`}>
             <span className="remove-btn" onClick={e => setToggle(false)}>X</span>

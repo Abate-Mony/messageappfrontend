@@ -6,7 +6,8 @@ const Login = () => {
   const password = useRef(null)
   const email = useRef(null)
   const [error,setError]=useState("")
-  const loginUser = async () => {
+  const loginUser = async (e) => {
+    e.target.innerHTML="please wait ..."
     if(!password.current.value || !email.current.value){
       return  
     }
@@ -21,13 +22,12 @@ const Login = () => {
       })
     })
     if(!res.ok){
-      
       const data = await res.text()
-      console.log(data)
       setError("try again later")
       setTimeout(() => {
         setError(false)
       }, 4000);
+    e.target.innerHTML="login"
       console.log("fail to login user")
       return 
     }

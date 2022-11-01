@@ -2,6 +2,20 @@ import { useState,useEffect } from 'react'
 import Messagerow from '../components/Messagerow'
 import { useNavigate } from 'react-router-dom'
 const Home = () => {
+  // const [socket,setSocket]=useState(new WebSocket("ws://localhost:5000"))
+  
+//   socket.onmessage= function (e){
+// console.log(createdBy,":-----:",id)
+// alert(id)
+//     const id=e.data
+//     const  createdBy=sessionStorage.getItem("id")
+//       getUsers()
+
+//     if(id==createdBy){
+//     }
+//     console.log("message from server is hello",id)
+//   }
+  
   const navigate = useNavigate()
   const url = "http://localhost:5000/auth/users"
   const [users, setUsers] = useState([])
@@ -23,6 +37,7 @@ const Home = () => {
   }
   useEffect(() => {
     getUsers()
+    // setSocket(new WebSocket("ws://localhost:5000"))
     return () => {
     }
   }, [])

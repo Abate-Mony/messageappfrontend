@@ -554,6 +554,10 @@ body {
     min-height: 100vh;
 }
 
+.main-login-container .left-container {
+    display: none;
+}
+
 .main-login-nav {
     /* border: 1px solid orange; */
     padding: 1rem;
@@ -927,7 +931,11 @@ body {
 
 /* media querys for big devices */
 
-@media screen and (min-width:600px) {
+@media screen and (min-width:576px) {
+    .container {
+        width: var(--container-md);
+        margin: 0 auto;
+    }
     .backBtn {
         display: none;
     }
@@ -951,5 +959,33 @@ body {
     }
     .logout {
         width: 60%;
+    }
+    .main-login-container {
+        display: grid;
+        grid-template-columns: 55% 45%
+    }
+    .main-login-container .left-container {
+        display: block;
+    }
+}
+
+@media screen and (min-width:767px) {
+    .container {
+        width: var(--container-lg);
+        margin: 0 auto;
+    }
+    .main-login-container {
+        display: grid;
+        grid-template-columns: 60% 40%
+    }
+    .message {
+        max-width: 90%;
+    }
+}
+
+@media screen and (min-width:992px) {
+    .main-login-container {
+        display: grid;
+        grid-template-columns: 65% 35%
     }
 }

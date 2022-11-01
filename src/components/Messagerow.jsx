@@ -1,5 +1,5 @@
 // import React from 'react'
-import imgsrc from '../images/23IMG_0265.jpg'
+import imgsrc from '../bg-1.jpg'
 const messagerow = ({ name, id, message, time }) => {
     const date = new Date(time).toLocaleDateString()
     const hour = new Date(time).toLocaleTimeString()
@@ -9,7 +9,7 @@ const messagerow = ({ name, id, message, time }) => {
     return (
         <div className="messagebox" style={{ backgroundColor: "white" }}>
             <div className="message-img center">
-                <img src={`http://192.168.43.32:5000/profile/${id}.jpg`} onError={handleError}
+                <img src={`http://localhost:5000/profile/${id}.jpg`} onError={handleError}
                     className="fit-img circle" style={{ width: 60 + "px", height: 60 + "px" }} alt={"rose are red"} />
             </div>
 

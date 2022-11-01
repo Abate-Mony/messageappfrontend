@@ -1,5 +1,6 @@
 import {useRef} from 'react'
 import { Link, Outlet ,useNavigate} from 'react-router-dom'
+import imgsrc from '../bg-1.jpg'
 const Navauth = () => {
     const navigate = useNavigate()
     const translate=useRef(null)
@@ -13,7 +14,13 @@ const Navauth = () => {
         translate.current.style.left="50%"
     }
     return (
-        <div className="main-login-container container" style={{ backgroundColor: "white" }}>
+        <div className="container">
+
+        <div className="main-login-container" style={{ backgroundColor: "white" }}>
+<div className="left-container" style={{color:"black"}}>
+    <img src={imgsrc} alt="" className="fit-img" />
+</div>
+<div className="right-container">
 
             <div className="main-login-nav">
                 <h2>
@@ -31,7 +38,11 @@ const Navauth = () => {
                 </div>
             </div>
             <Outlet />
+</div>
+
         </div>
+        </div>
+
     )
 }
 

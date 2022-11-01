@@ -8,6 +8,7 @@ import Animationpic from '../components/Animationpic'
 import Upload from '../components/Upload'
 const Message = () => {
   // console.log("enter here again")
+
   const [loading, setLoading] = useState(true)
   const [modal, setModal] = useState(false)
   const [profile, setProfile] = useState(false)
@@ -25,6 +26,8 @@ const Message = () => {
   const token = sessionStorage.getItem("token")
   const file = useRef(null)
   const fileContainer = useRef(null)
+  const [socket,setSocket]=useState(null)
+
   const getData = async () => {
     const res = await fetch("http://localhost:5000/message/" + sentTo, {
       headers: {
@@ -77,6 +80,18 @@ const Message = () => {
     }
     if (res.ok) {
       console.log("successfully send the message")
+      socket.onclose=function () {
+        console.log("closing")
+      }
+      socket.onmessage= function (e){
+        console.log(e.data)
+        const id=e.data
+        if(id==sentTo){
+          getData()
+        }
+        console.log("message from server is hello")
+      }
+  socket.send(createdBy)
     }
     return
 
@@ -91,7 +106,7 @@ const Message = () => {
         left: 0,
         behavior: "smooth"
       })
-
+     setSocket(new WebSocket("ws://localhost:5000"))
   }, [sentTo])
 
 
@@ -150,7 +165,7 @@ const Message = () => {
           <span></span>
         </div>
       </div>
-      <Upload toggle={toggleFile} setToggle={setToggleFile} sentTo={sentTo} createdBy={createdBy} getData={getData}/>
+      <Upload toggle={toggleFile}  socket={socket} setToggle={setToggleFile} sentTo={sentTo} createdBy={createdBy} getData={getData}/>
       <Emj modal={modal} _message={_message} />
       <MoreOpton mousedown={mousedown} message={info} />
       <Animationpic toggle={profile} setToggle={setProfile} id={sentTo} />

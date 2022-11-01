@@ -24,13 +24,16 @@ const Signup = () => {
       if (this.status == 200 && this.readyState == 4) {
         const { token,_id } = JSON.parse(this.response)
         console.log(token)
-        // sessionStorage.getItem("token")&&sessionStorage.removeItem("token")
         sessionStorage.setItem("token", token)
     sessionStorage.setItem("id",_id)
 
         navigate("/")
       } else {
         console.log("something went wrong")
+        setError("try again later")
+      setTimeout(() => {
+        setError(false)
+      }, 4000);
       }
     }
     xhr.onerror = function (e) {
@@ -89,7 +92,7 @@ const Signup = () => {
           }} />
         <input type="file" name="file" id="file" required={true} />
         {error && <Alert message={error} />}
-        <button type="submit">
+        <button type="submit" >
           Create Account
         </button>
       </div>

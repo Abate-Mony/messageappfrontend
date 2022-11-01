@@ -20,7 +20,7 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
-                {W <= 600 ? <><Route path='/' element={<Home />}>
+                {W <= 576 ? <><Route path='/' element={<Home />}>
                 </Route>
 
                     <Route path='/message/:id' element={<Message />}>

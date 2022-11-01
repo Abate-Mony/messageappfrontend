@@ -1,11 +1,14 @@
 import React from 'react'
-import imgsrc from  '../images/26IMG_0339.jpg'
+import imgsrc from  '../bg-1.jpg'
 const User = ({name,id}) => {
+  const handleError=e=>{
+    e.target.src= imgsrc
+  }
   return (
     <div className="container" style={{ padding:"0 1rem"}}>
           <div className="user-container">
             <div className="img-container">
-              <img src={`http://192.168.43.32:5000/profile/${id}.jpg`} className="fit-img" alt={name}/>
+              <img src={`http://localhost:5000/profile/${id}.jpg`} onError={handleError} className="fit-img" alt={name}/>
             </div>
             <div className="user-details-container">
               <h4>
