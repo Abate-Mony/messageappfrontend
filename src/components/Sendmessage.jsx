@@ -3,7 +3,7 @@ const Sendmessage = ({message,imgsrc}) => {
     <div className="flex-end">
           <div className="send-message message" style={{ backgroundColor:imgsrc&&"white" }}>
             {imgsrc?
-            <img src={`http://localhost:5000/images/${imgsrc}`} alt="mmga" />
+            <img src={`http://192.168.43.32:5000/images/${imgsrc}`} alt="mmga" />
             :message
             }
           </div>

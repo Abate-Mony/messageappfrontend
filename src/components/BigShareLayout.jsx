@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import Home from '../pages/Home'
 import Users from '../pages/Users'
-
-const SharedLayout = () => {
+import Setting from '../pages/Setting'
+const SharedLayout = ({socket}) => {
     const [toggle, setToggle] = useState(true)
     return (
         <div className="big-share-layout" style={{ backgroundColor: "white" }}>
@@ -15,9 +15,12 @@ const SharedLayout = () => {
                     </span>}
             </div>
             <div>
-                {toggle ? <Home /> : <Users />}
+                {toggle ? <Home socket={socket}/> : <Users />}
             </div>
             <Outlet />
+            <div class="big-settings">
+            <Setting/>
+            </div>
         </div>
     )
 }

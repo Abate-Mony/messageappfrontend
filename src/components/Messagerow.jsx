@@ -1,6 +1,9 @@
 // import React from 'react'
 import imgsrc from '../bg-1.jpg'
-const messagerow = ({ name, id, message, time }) => {
+import { useNavigate } from 'react-router-dom'
+
+const Messagerow = ({ name, id, message, time }) => {
+  const navigate = useNavigate()
     const date = new Date(time).toLocaleDateString()
     const hour = new Date(time).toLocaleTimeString()
     const handleError = e => {
@@ -13,10 +16,12 @@ const messagerow = ({ name, id, message, time }) => {
                     className="fit-img circle" style={{ width: 60 + "px", height: 60 + "px" }} alt={"rose are red"} />
             </div>
 
-            <div className="message_right">
+            <div className="message_right" onClick={e => {
+                navigate(`/message/${id}`)
+              }}>
                 <div>
                     <h2>
-                        {name}
+                        {name.split(" ").map(_=>_.charAt(0).toUpperCase() +_.slice(1)).join(" ")}
                     </h2>
                     <span>{date === (new Date().toLocaleDateString()) ? hour : date}</span>
 
@@ -32,4 +37,4 @@ const messagerow = ({ name, id, message, time }) => {
     )
 }
 
-export default messagerow
+export default Messagerow

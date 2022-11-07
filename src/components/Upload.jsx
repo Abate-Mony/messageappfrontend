@@ -1,31 +1,45 @@
 import { useRef } from 'react'
-const Upload = ({ toggle, setToggle, sentTo, createdBy,getData }) => {
+const Upload = ({ toggle, setToggle, sentTo, getData }) => {
     const form = useRef(null)
     const handleSubmit = e => {
         e.preventDefault()
-        const socket=new WebSocket("ws://localhost:5000")
+        const token=sessionStorage.getItem("token")
+        // const socket = new WebSocket("ws://localhost:5000")
         const FD = form.current
         const formdata = new FormData(FD)
         formdata.append("sentTo", sentTo)
-        formdata.append("createdBy", createdBy)
+        // formdata.append("createdBy", createdBy)
+        const fileSize = formdata.get("file").size / (1024 * 1024)
+        const fileType = formdata.get("file").type
+        if (fileSize > 1) {
+            alert("please upload an image with less than 1mb")
+            return
+        }
+        console.log(fileType)
+        const re = /image/g
+        if (!fileType.match(re)) {
+            alert("please upload an imae file thanks")
+            return
+        }
         const url = "http://localhost:5000/upload"
         const xhr = new XMLHttpRequest()
         xhr.onload = function (e) {
             if (this.status == 200 && this.readyState == 4) {
-                // everything is ok her 
                 console.log(this.responseText)
                 setToggle(false)
                 getData()
-                socket.send(sentTo)
+                // socket.send(sentTo)
             } else {
                 // something is wrong here
+                // the picturre fail to save i
                 console.log(this.responseText)
             }
         }
         xhr.error = function () {
             console.log("something went wrong")
         }
-        xhr.open("POST",url,true)
+        xhr.open("POST", url, true)
+        xhr.setRequestHeader("authorization",`${"doris "+token}`)
         xhr.send(formdata)
     }
 

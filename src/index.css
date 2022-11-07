@@ -173,14 +173,16 @@ body {
 }
 
 .user-container {
-    grid-template-columns: 20% 80%;
+    /* grid-template-columns: 20% 80%; */
     box-shadow: var(--shadow-1);
     border-radius: 10px;
     overflow: hidden;
-    display: grid;
+    /* display: grid; */
     padding: 1rem 0;
     align-items: center;
     padding: 0.4rem 1rem;
+    display: flex;
+    gap: 1rem;
 }
 
 .users-container .img-container img {
@@ -256,12 +258,14 @@ body {
 .message_right div {
     display: flex;
     justify-content: space-between;
+    overflow-x: hidden;
 }
 
 .message_right div h2 {
     font-size: 1.2rem;
     text-align: center;
     font-weight: 600;
+    padding-left: 0.3rem;
 }
 
 .message_right div span {
@@ -342,7 +346,7 @@ body {
 .message-inner-chart-header h2 {
     overflow: hidden;
     font-style: oblique;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     text-align: center;
 }
 
@@ -471,7 +475,6 @@ body {
 }
 
 .img-animation {
-    background-color: orange;
     margin: 4rem auto;
     position: absolute;
     opacity: 10;
@@ -559,7 +562,6 @@ body {
 }
 
 .main-login-nav {
-    /* border: 1px solid orange; */
     padding: 1rem;
     display: flex;
     flex-direction: column;
@@ -644,7 +646,6 @@ body {
 
 .login-container button,
 .signup-container button {
-    /* background-color: var(--bg-color-1); */
     margin-top: 1rem;
     color: var(--color-white);
     font-size: 1.6rem;
@@ -673,7 +674,8 @@ body {
 
 .setting-container {
     position: relative;
-    border-radius: 5px solid orange;
+    max-height: 100vh;
+    overflow-y: auto;
 }
 
 .setting-img-container {
@@ -693,7 +695,6 @@ body {
     margin: 0 auto;
     z-index: 12;
     border: 0.5rem solid var(--color-white);
-    /* transform: scale(1.2); */
 }
 
 .overlay {
@@ -742,10 +743,11 @@ body {
 ._modal {
     width: 100%;
     height: 100%;
-    position: absolute;
+    position: fixed;
     left: 0;
     top: 0;
-    background-color: rgb(2, 10, 12, 0.9);
+    /* background-color: rgb(2, 10, 12, 0.9); */
+    background-color: transparent;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -756,6 +758,7 @@ body {
     padding: 4rem 2rem;
     background-color: var(--bg-color-1);
     border-radius: 0.5rem;
+    position: relative;
 }
 
 ._modal div button {
@@ -775,6 +778,14 @@ body {
     background-color: var(--color-danger);
 }
 
+._modal div h2 {
+    position: absolute;
+    top: 1rem;
+    left: 0;
+    width: 100%;
+    font-size: 2rem;
+}
+
 .scale {
     animation-name: scale;
     animation-duration: 0.5s;
@@ -787,9 +798,29 @@ body {
     overflow-y: auto;
 }
 
+#hi-btn {
+    position: absolute;
+    bottom: 5rem;
+    right: 2rem;
+    background-color: "orange";
+    color: "green";
+    font-size: "2rem";
+    z-index: 22;
+    width: fit-content;
+    padding: 1rem 1rem;
+    background-color: var(--bg-color-1);
+    border-radius: 1rem
+}
+
 @keyframes scale {
-    to {
+    from {
+        transform: scale(0.8);
+    }
+    65% {
         transform: scale(1.1);
+    }
+    to {
+        transform: scale(1);
     }
 }
 
@@ -925,13 +956,147 @@ body {
     padding: 1rem;
     font-size: 1rem;
     border-radius: 0.3rem;
-    /* z-index: ; */
+}
+
+.information-box {
+    padding: 1rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    color: var(--bg-color-1);
+    padding-bottom: 5rem;
+}
+
+.contact-us {
+    padding: 1rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    color: var(--bg-color-1);
+    padding-bottom: 5rem;
+    justify-content: center;
+    text-align: center;
+}
+
+.contact-us h2 {
+    font-size: 2rem;
+    color: var(--bg-color-1);
+    color: darkcyan;
+}
+
+.contact-us p,
+.contact-us a {
+    font-size: 1.5rem;
+}
+
+.contact-us a {
+    color: #ff6600;
+}
+
+.information-box div {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2rem;
+    border: 1px double var(--bg-color-1);
+    padding: 0.6rem;
+    border-radius: 3px;
+}
+
+.information-box span:nth-child(1) {
+    font-size: 1.4rem;
+}
+
+.information-box span:nth-child(2) {
+    color: green;
+}
+
+.information-box div:hover {
+    transition: all 0.6s ease;
+    background-color: rgb(45, 45, 85, 0.7);
+    color: white
+}
+
+.information-box div:hover>span:nth-child(2) {
+    color: orange;
+}
+
+.navigate-user {
+    position: fixed;
+    bottom: 1rem;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    /* border: 1px solid orange; */
+    width: 100%;
+}
+
+.navigate-user div {
+    /* background: green; */
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    /* border: 1px solid var(--bg-color-1); */
+    z-index: 11;
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    font-size: 2rem
+}
+
+.date-formater {
+    text-align: "center";
+    width: 100%;
+    background-color: "orange"
+}
+
+.switch-container {
+    display: grid;
+    justify-content: space-between;
+    /* border: 2px solid orange; */
+    text-align: center;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 0.5rem;
+    position: relative;
+}
+
+.switch-container>* {
+    padding: 0.5rem;
+}
+
+.switch-container>*:nth-child(2),
+.switch-container>*:nth-child(3) {
+    border-right: 5px solid var(--bg-color-1);
+}
+
+.switcher-bottom {
+    position: absolute;
+    height: 5px;
+    width: 25%;
+    bottom: 0;
+    left: 5%;
+    background-color: #05130f;
+    border: none;
+    padding: 0;
+    transition: all 0.5s ease;
 }
 
 
 /* media querys for big devices */
 
 @media screen and (min-width:576px) {
+    .navigate-user {
+        display: none;
+    }
+    .big-share-layout {
+        grid-template-columns: repeat(2, 1fr)
+    }
+    /* .toggleSetting {
+        display: none;
+    } */
+    .big-settings {
+        display: none;
+    }
     .container {
         width: var(--container-md);
         margin: 0 auto;
@@ -950,6 +1115,7 @@ body {
         grid-template-columns: 60% 40%;
         padding-left: 2rem;
         padding-right: 2rem;
+        box-shadow: 0 10px 10px var(--bg-color-1);
     }
     .recieve-message {
         margin-left: 2rem;
@@ -981,11 +1147,55 @@ body {
     .message {
         max-width: 90%;
     }
+    .contact-us h2 {
+        font-size: 1.2rem;
+    }
 }
 
 @media screen and (min-width:992px) {
     .main-login-container {
         display: grid;
         grid-template-columns: 65% 35%
+    }
+}
+
+@media screen and (min-width:1024px) {
+    .big-share-layout {
+        grid-template-columns: 30% 50% 20%
+    }
+    .toggleSetting {
+        display: none;
+    }
+    .big-settings {
+        display: block;
+    }
+    .input-inner-chart {
+        width: 50%;
+    }
+    .message-inner-chart-header {
+        width: 50%;
+        text-align: left;
+    }
+    .header {
+        width: 30%;
+    }
+    .logout {
+        width: 20%;
+        text-align: center;
+        padding: 1.2rem;
+        background-color: white
+    }
+    .--name-container h2 {
+        justify-content: end;
+        text-align: left;
+        font-size: 1.5rem;
+    }
+    .--name-container .online-status-container {
+        justify-content: start;
+        text-align: left;
+        padding-left: 1rem;
+    }
+    .--name-container .online-status-container div:nth-child(2) {
+        font-size: 1rem;
     }
 }

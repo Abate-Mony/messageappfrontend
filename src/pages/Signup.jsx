@@ -6,8 +6,7 @@ const Signup = () => {
   const form = useRef(null)
   const password1 = useRef(null)
   const password2 = useRef(null)
-  const email = useRef(null)
-  const username = useRef(null)
+  const btn = useRef(null)
   const [error, setError] = useState(false)
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -17,29 +16,45 @@ const Signup = () => {
     ) {
       alert("form validation failed")
     }
+
+
+    // const searchContainer = document.getElementById("search")
+    const text = "Please wait Creating Account"
+    var i = 0
+    var timer = setInterval(() => {
+      btn.current.innerHTML = text.slice(0, Math.abs(i))
+      i > text.length - 1 ? i *= -1 : i += 1
+    }, 200)
+    
     const FD = form.current
     const formData = new FormData(FD)
     const xhr = new XMLHttpRequest()
     xhr.onload = function (e) {
-      if (this.status == 200 && this.readyState == 4) {
-        const { token,_id } = JSON.parse(this.response)
-        console.log(token)
+      if (this.status === 200 && this.readyState === 4) {
+        // this means the server send back a valid response back to the client
+        const { token, _id } = JSON.parse(this.response)
+        if(sessionStorage.getItem("users")){
+          sessionStorage.removeItem("users")
+        }
         sessionStorage.setItem("token", token)
-    sessionStorage.setItem("id",_id)
-
+        sessionStorage.setItem("id", _id)
+        clearInterval(timer)
         navigate("/")
       } else {
+        clearInterval(timer)
+        btn.current.innerHTML = "Create Account"
+        console.log(this.response)
         console.log("something went wrong")
         setError("try again later")
-      setTimeout(() => {
-        setError(false)
-      }, 4000);
+        setTimeout(() => {
+          setError(false)
+        }, 4000);
       }
     }
     xhr.onerror = function (e) {
       console.log("something happened ")
     }
-    xhr.open("POST", "http://localhost:5000/auth/signup", true)
+    xhr.open("POST", "http://192.168.43.32:5000/auth/signup", true)
     xhr.send(formData)
 
   }
@@ -47,14 +62,13 @@ const Signup = () => {
     <form encType="multipart/form-data"
       ref={form} onSubmit={handleSubmit}>
       <div style={{ backgroundColor: "white" }} className="signup-container">
-        <label >User Name</label>
-
-        <input type="text" name={"name"} placeholder={"User Name"} required={true} id="name" />
+        <label >First Name</label>
+        <input type="text" name={"first_name"} placeholder={"First Name"} required={true} id="first_name" />
+        <label >Second Name</label>
+        <input type="text" name={"second_name"} placeholder={"Second Name"} required={true} id="second_name" />
         <label >Email Adress</label>
-
         <input type="email" name={"email"} placeholder={"Email"} id="email" required={true} />
         <label >Password</label>
-
         <input type="password" name={"password"} placeholder={"Password"}
           ref={password1} onChange={e => {
             if (password2.current.value.length >= 1) {
@@ -91,8 +105,9 @@ const Signup = () => {
 
           }} />
         <input type="file" name="file" id="file" required={true} />
-        {error && <Alert message={error} />}
-        <button type="submit" >
+        {error && <Alert message={error} />
+        }
+        <button type="submit" ref={btn} style={{fontSize:"1.3rem"}}>
           Create Account
         </button>
       </div>

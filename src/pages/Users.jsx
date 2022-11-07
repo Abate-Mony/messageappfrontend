@@ -7,7 +7,7 @@ const Users = () => {
   const [users, setUsers] = useState([])
   const id = sessionStorage.getItem("id")
   const getUsers = async (searchValue) => {
-    const res = await fetch(`http://localhost:5000/auth/allusers/${searchValue}`)
+    const res = await fetch(`http://192.168.43.32:5000/auth/allusers/${searchValue}`)
     if (!res.ok) {
       console.log("something wrong wrong happen here ")
       return
@@ -30,6 +30,14 @@ const Users = () => {
   }
   return (
     <div className="minHeight" style={{ backgroundColor: "white" }}>
+      <div className="navigate-user">
+        <div className="back" onClick={e =>navigate("/")}>
+          🏠
+        </div>
+        <div className="right" onClick={e =>navigate("/setting")}>
+⚙
+        </div>
+      </div>
       <div className="header" style={{ backgroundColor: "white" }}>
 
         <h2>
@@ -59,12 +67,11 @@ const Users = () => {
 
       </div>
       <div className="users-container">
-        {users.length>=1?users?.map(({ name, _id }) => {
-
+        {users.length>=1?users?.map(({ first_name,second_name, _id,createdAt }) => {
           return (<span key={_id} onClick={e => {
             navigate(`/message/${_id}`)
           }}>
-            {id !== _id && <User name={name} id={_id} />}
+            {id !== _id && <User name={[first_name,second_name]} id={_id} createdAt={createdAt} />}
           </span>)
         }):search&&<div style={{padding:"4rem 1rem",textAlign:"center",color:"red",fontSize:"2rem" }}>
         no users </div>}
