@@ -30,7 +30,7 @@ function App() {
         console.log("user is offline")
     }
     socket.onclose = function () {
-        socket = new WebSocket("ws://192.168.43.32:5000")
+        socket =socket = new WebSocket("wss://messageappalaisah.herokuapp.com")
     }
     const [W, setW] = useState(window.innerWidth)
     window.onresize = function () {

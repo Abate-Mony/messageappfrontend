@@ -39,7 +39,7 @@ const Login = () => {
       method: "post",
       headers: {
         "content-Type": "Application/json",
-        "Access-Control-Allow-Origin": "http://localhost:3000"
+        "Access-Control-Allow-Origin": "https://messageappalaisah.herokuapp.com/auth/login"
       }
       , body: JSON.stringify({
         password: password.current.value,
