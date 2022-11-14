@@ -1,10 +1,39 @@
 import React from 'react'
 import imgsrc from '../bg-1.jpg'
+import {useState,useEffect} from 'react'
 const User = ({ name, id,createdAt }) => {
+  const [src, setSrc] = useState("")
+
   const handleError = e => {
     e.target.src = imgsrc
   }
-  function checkUserTime(date){
+useEffect(() => {
+imageSrc()
+
+},[])
+
+async function imageSrc (){
+  const _res=  await fetch("https://messageappalaisah.herokuapp.com/profile/" + id)
+  const {image} = await _res.json()
+  console.log(image)
+  setSrc("https://messageappalaisah.herokuapp.com/profile/image/"+image)
+  console.log(image)
+}
+
+
+   function checkUserTime(date){
+
+
+    // const _res=  await fetch("https://messageappalaisah.herokuapp.com/profile/" + id)
+    // const {image} = await _res.json()
+    // console.log(image)
+    // setSrc("https://messageappalaisah.herokuapp.com/profile/image/"+image)
+
+
+
+
+
+
     const milliSeconds=new Date()- new Date(date);
     const seconds=milliSeconds/1000
     const minute=seconds/60;
@@ -19,7 +48,8 @@ const User = ({ name, id,createdAt }) => {
     <div className="container" style={{ padding: "0 1rem" }}>
       <div className="user-container">
         <div className="img-container">
-          <img src={`http://localhost:5000/profile/${id}.jpg`} onError={handleError} className="fit-img" alt={name} />
+          <img src={src} 
+          onError={handleError} className="fit-img" alt={"0"} />
         </div>
         <div className="user-details-container">
           <h4>

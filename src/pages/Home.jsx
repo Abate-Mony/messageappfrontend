@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 const Home = ({ socket }) => {
 
   const navigate = useNavigate()
-  const url = "http://192.168.43.32:5000/auth/users"
+  const url = "https://messageappalaisah.herokuapp.com/auth/users"
   const [users, setUsers] = useState([])
   const token = sessionStorage.getItem("token")
 
@@ -25,12 +25,9 @@ const Home = ({ socket }) => {
       }
     })
     const data = await res.json()
-    const __users = JSON.parse(sessionStorage.getItem("user"))
-    // console.log(sessionStorage.getItem("users")===JSON.stringify([...data.users]))
     if (!(sessionStorage.getItem("users") === JSON.stringify([...data.users]))) {
       sessionStorage.setItem("users", JSON.stringify([...data.users]))
       setUsers([...data.users])
-      // console.log("hello")
     }
   }
 
@@ -40,10 +37,13 @@ const Home = ({ socket }) => {
 
   socket.onmessage = function (e) {
     const id = e.data
-    console.log("home here")
     const createdBy = sessionStorage.getItem("id")
-    // alert("rose")
-    getUsers()
+    
+    if (id.split("-")[0] == createdBy) {
+      console.log("home here")
+      getUsers()
+    }
+
   }
   socket.onopen = function (e) {
     console.log("connected to wss ", e.data)
@@ -51,15 +51,10 @@ const Home = ({ socket }) => {
   }
 
   return (
-    <div className="_home">
-      <div className="user-alert">
-
-      </div>
+    <>
       <div className="add-btn center circle" style={{ width: "50px", height: "50px" }} onClick={e => navigate("/users")}>
         +
       </div>
-      <div className="container?">
-
         <div className="header-container">
           <h2>
             MESSAGES
@@ -68,8 +63,6 @@ const Home = ({ socket }) => {
             🧰
           </span>
         </div>
-      </div>
-      <div className="container?">
         <div className="message-container">
           {users.map(({ name, _id, createdAt, message }, index) => {
             return (
@@ -80,9 +73,8 @@ const Home = ({ socket }) => {
             )
           })}
         </div>
-      </div>
 
-    </div>
+    </>
   )
 }
 

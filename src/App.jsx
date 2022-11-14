@@ -8,18 +8,33 @@ import BigShareLayout from './components/BigShareLayout'
 import SharedLayout from './components/SharedLayout'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { useState } from 'react'
-const socket = new WebSocket("ws://192.168.43.32:5000")
 function App() {
+    var socket = new WebSocket("ws://messageappalaisah.herokuapp.com")
+    var isOpen = (ws) => ws.readyState === ws.OPEN
+    
+    const USER_ID = () => {
+        if (sessionStorage.getItem("id")) {
+            return sessionStorage.getItem("id")
+        }
+        return null
+    }
+    if (window.navigator.onLine) {
+        socket.onopen = function (e) {
+            console.log(e)
+            socket.send(
+                `user_id:${123456789}`
+            )
+        }
+      
+    } else {
+        console.log("user is offline")
+    }
     socket.onclose = function () {
-
-        console.log("socket is closing")
-        // window.location.reload()
+        socket = new WebSocket("ws://192.168.43.32:5000")
     }
     const [W, setW] = useState(window.innerWidth)
-    // console.log(W)
     window.onresize = function () {
         setW(window.innerWidth)
-        // console.log(W)
     }
     return (
         <BrowserRouter>
@@ -29,7 +44,7 @@ function App() {
 
                     <Route path='/message/:id' element={<Message socket={socket} />}>
                     </Route>
-                    <Route path='/users' element={<Users />}>
+                    <Route path='/users' element={<Users socket={socket}/>}>
                     </Route>
                     <Route path="setting" element={<Setting socket={socket} />}>
                     </Route>

@@ -7,6 +7,10 @@ const Login = () => {
   const email = useRef(null)
   const [error, setError] = useState("")
   const btn = useRef(null)
+  const [preventDAC, setDAC] = useState(false)
+
+  // const [timer, setTimer] = useState(null)
+  var timer = null
 
   const display = msg => {
     setError(msg)
@@ -17,6 +21,9 @@ const Login = () => {
 
 
   const loginUser = async (e) => {
+    clearInterval(timer)
+    setDAC(true)
+
     if (!password.current.value || !email.current.value) {
       display("please provide  a password ,email")
       return
@@ -24,14 +31,15 @@ const Login = () => {
 
     const text = "Please wait ..."
     var i = 0
-    var timer = setInterval(() => {
+    timer = setInterval(() => {
       btn.current.innerHTML = text.slice(0, Math.abs(i))
       i > text.length - 1 ? i *= -1 : i += 1
     }, 200)
-    const res = await fetch("http://192.168.43.32:5000/auth/login", {
+    const res = await fetch("https://messageappalaisah.herokuapp.com/auth/login", {
       method: "post",
       headers: {
         "content-Type": "Application/json",
+        "Access-Control-Allow-Origin": "http://localhost:3000"
       }
       , body: JSON.stringify({
         password: password.current.value,
@@ -39,6 +47,7 @@ const Login = () => {
       })
     })
     if (!res.ok) {
+      setDAC(false)
       clearInterval(timer)
       btn.current.innerHTML = "Loging"
       const { msg } = await res.json()
@@ -56,6 +65,8 @@ const Login = () => {
 
   return (
     <div style={{ backgroundColor: "white" }} className="login-container">
+      <div className="prevent_click" style={{ display: preventDAC ? "block" : "none" }}>
+      </div>
       <label >Email Address</label>
       <input type="email" required={true}
         name="email" placeholder={"Email Address"} ref={email} />
@@ -69,7 +80,7 @@ const Login = () => {
           setError(false)
         }} />
       {error && <Alert message={error} />}
-      <button type="button" onClick={loginUser} ref={btn}>
+      <button type="button" onClick={loginUser} ref={btn} style={{ fontSize: "1.3rem" }}>
         Login
       </button>
     </div>

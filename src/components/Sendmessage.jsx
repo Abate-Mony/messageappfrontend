@@ -3,7 +3,7 @@ const Sendmessage = ({message,imgsrc}) => {
     <div className="flex-end">
           <div className="send-message message" style={{ backgroundColor:imgsrc&&"white" }}>
             {imgsrc?
-            <img src={`http://192.168.43.32:5000/images/${imgsrc}`} alt="mmga" />
+            <img src={`https://messageappalaisah.herokuapp.com/images/${imgsrc}`} alt="mmga" />
             :message
             }
           </div>

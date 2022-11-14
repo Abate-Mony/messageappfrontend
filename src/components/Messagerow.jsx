@@ -1,8 +1,20 @@
-// import React from 'react'
 import imgsrc from '../bg-1.jpg'
 import { useNavigate } from 'react-router-dom'
-
+import { useState, useEffect} from 'react'
 const Messagerow = ({ name, id, message, time }) => {
+  const [src, setSrc] = useState("")
+  useEffect(() => {
+    imageSrc()
+    
+    },[])
+    
+    async function imageSrc (){
+      const _res=  await fetch("http://localhost:5000/profile/" + id)
+      const {image} = await _res.json()
+      console.log(image)
+      setSrc("http://localhost:5000/profile/image/"+image)
+      console.log(image)
+    }
   const navigate = useNavigate()
     const date = new Date(time).toLocaleDateString()
     const hour = new Date(time).toLocaleTimeString()
@@ -12,7 +24,7 @@ const Messagerow = ({ name, id, message, time }) => {
     return (
         <div className="messagebox" style={{ backgroundColor: "white" }}>
             <div className="message-img center">
-                <img src={`http://localhost:5000/profile/${id}.jpg`} onError={handleError}
+                <img src={src} onError={handleError}
                     className="fit-img circle" style={{ width: 60 + "px", height: 60 + "px" }} alt={"rose are red"} />
             </div>
 

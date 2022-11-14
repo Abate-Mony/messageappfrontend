@@ -1,64 +1,135 @@
 import { useState, useEffect, useRef } from 'react'
 import User from '../components/User'
 import { useNavigate } from 'react-router-dom'
-const Users = () => {
+import PulseUser from '../components/PulseUser'
+import Notification from '../components/Notification'
+const Users = ({socket}) => {
+  const [incomingmessage, setIncomingMessage] = useState(false)
+  const [incomingInfo, setInComingInfo] = useState([])
+  const createdBy = sessionStorage.getItem("id")
+    const token = sessionStorage.getItem("token")
+    var _timer=null
+    const text = "Search user e.g Ako Bate"
+    var i = 0
+
+
+
+
+const [isLoading, setisLoading] = useState(true)
   const search = useRef(null)
   const navigate = useNavigate()
   const [users, setUsers] = useState([])
   const id = sessionStorage.getItem("id")
   const getUsers = async (searchValue) => {
-    const res = await fetch(`http://192.168.43.32:5000/auth/allusers/${searchValue}`)
+    
+    const res = await fetch(`http://localhost:5000/auth/allusers/${searchValue}`)
     if (!res.ok) {
       console.log("something wrong wrong happen here ")
       return
     }
-    // ecvverythingi s gps ere
     const { users } = await res.json()
-    // console.log(users)
     setUsers([...users])
+    setisLoading(false)
+  }
+  
+  function animate() {
+    clearInterval(_timer)
+    _timer= setInterval(() => {
+      if(!search.current){
+        return
+      }
+    search.current.placeholder=text.slice(0, Math.abs(i))
+      i > text.length - 1 ? i *= -1 : i += 1
+    }, 100)
   }
   useEffect(() => {
     getUsers("*")
+    animate()
+    return () => {
+    }
   }, [])
-  const handleSearch = e => {
 
+  socket.onmessage = function (e) {
+    const id = e.data
+    if (id.split("-")[0] === createdBy ) {
+      (async function () {
+        const userId = id.split("-")[1]
+        const messageId = id.split("-")[2];
+        const res = await fetch("http://localhost:5000/message/single/" + messageId, {
+          headers: {
+            "content-Type": "Application/json",
+            "Authorization": `doris ${token}`
+          }
+        })
+        
+      const response = await fetch(`http://localhost:5000/auth/user/${userId}`)
+      const { user_names: { first_name, second_name } } = await response.json()
+      const names = first_name + " " + second_name
+        const data = await res.json()
+        const _Message = data.message[0].message
+        setInComingInfo(
+          [userId, _Message,names]
+        )
+      }())
+
+      setIncomingMessage(true)
+      _timer = setTimeout(() => {
+        setIncomingMessage(false)
+      }, 3000);
+      return
+    }
+    
+  }
+
+
+
+
+
+
+
+
+
+  const handleSearch = e => {
     const searchvalue = search.current.value
-    if(searchvalue.length<=0){
-      return 
+    if (searchvalue.length <= 0) {
+      return
     }
     getUsers(searchvalue)
   }
   return (
-    <div className="minHeight" style={{ backgroundColor: "white" }}>
+    
+    <div className="user-big-container">
+      <Notification incomingmessage={incomingmessage} incomingInfo={incomingInfo}/>
       <div className="navigate-user">
-        <div className="back" onClick={e =>navigate("/")}>
+        <div className="back" onClick={e => navigate("/")}>
           🏠
         </div>
-        <div className="right" onClick={e =>navigate("/setting")}>
-⚙
+        <div className="right" onClick={e => navigate("/setting")}>
+          ⚙
         </div>
       </div>
-      <div className="header" style={{ backgroundColor: "white" }}>
-
-        <h2>
-          Search users
-        </h2>
-        <div className="input-searchusers">
-          <span onClick={handleSearch}>
+      <div className="header" style={{
+        backgroundColor:
+          "rgb(255,255,255,0)"
+      }}>
+        
+        <div className="input-searchusers"  >
+          <span onClick={handleSearch} >
             🔍
           </span>
           <input type="text" id="__search"
-            autoComplete="false" placeholder="search user e.g Rose mary" ref={search} onChange={e => {
+            autoComplete="false"
+            placeholder={"please user e.g Ako Bate "} ref={search} onChange={e => {
               if (e.target.value.length < 1) {
                 getUsers("*")
               }
             }}
-            
-            onKeyUp={e=>e.key==="Enter"&&handleSearch()
-            }/>
-          <span className="delBtn" onClick={e=>
-               [getUsers("*"),
-               search.current.value = ""]
+
+            onKeyUp={e => e.key === "Enter" && handleSearch()
+            } />
+          <span className="delBtn" onClick={e =>
+            [getUsers("*"),
+            search.current.value = ""]
           }
           >
             ⬅
@@ -67,14 +138,14 @@ const Users = () => {
 
       </div>
       <div className="users-container">
-        {users.length>=1?users?.map(({ first_name,second_name, _id,createdAt }) => {
+        {isLoading?<PulseUser/>: users.length >= 1 ? users?.map(({ first_name, second_name, _id, createdAt }) => {
           return (<span key={_id} onClick={e => {
             navigate(`/message/${_id}`)
           }}>
-            {id !== _id && <User name={[first_name,second_name]} id={_id} createdAt={createdAt} />}
+            {id !== _id && <User name={[first_name, second_name]} id={_id} createdAt={createdAt} />}
           </span>)
-        }):search&&<div style={{padding:"4rem 1rem",textAlign:"center",color:"red",fontSize:"2rem" }}>
-        no users </div>}
+        }) : search && <div style={{ padding: "4rem 1rem", textAlign: "center", color: "red", fontSize: "2rem" }}>
+          no users </div>}
       </div>
 
     </div>

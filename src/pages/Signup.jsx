@@ -8,7 +8,10 @@ const Signup = () => {
   const password2 = useRef(null)
   const btn = useRef(null)
   const [error, setError] = useState(false)
+  const [preventDAC, setDAC] = useState(false)
   const handleSubmit = async (e) => {
+    // setError("plwase wait ")
+    setDAC(true)
     e.preventDefault()
     if (!(password1.current.value === password2.current.value)
       || password2.current.value.length < 4 ||
@@ -25,7 +28,7 @@ const Signup = () => {
       btn.current.innerHTML = text.slice(0, Math.abs(i))
       i > text.length - 1 ? i *= -1 : i += 1
     }, 200)
-    
+
     const FD = form.current
     const formData = new FormData(FD)
     const xhr = new XMLHttpRequest()
@@ -33,7 +36,7 @@ const Signup = () => {
       if (this.status === 200 && this.readyState === 4) {
         // this means the server send back a valid response back to the client
         const { token, _id } = JSON.parse(this.response)
-        if(sessionStorage.getItem("users")){
+        if (sessionStorage.getItem("users")) {
           sessionStorage.removeItem("users")
         }
         sessionStorage.setItem("token", token)
@@ -41,6 +44,7 @@ const Signup = () => {
         clearInterval(timer)
         navigate("/")
       } else {
+        setDAC(false)
         clearInterval(timer)
         btn.current.innerHTML = "Create Account"
         console.log(this.response)
@@ -54,13 +58,31 @@ const Signup = () => {
     xhr.onerror = function (e) {
       console.log("something happened ")
     }
-    xhr.open("POST", "http://192.168.43.32:5000/auth/signup", true)
+
+    // res.header("Access-Control-Allow-Origin", "http://localhost:5501"); // update to match the domain you will make the request from
+    // res.send(response.data);
+
+
+
+
+
+
+
+
+
+
+
+    xhr.open("POST", "https://messageappalaisah.herokuapp.com/auth/signup", true)
+    xhr.setRequestHeader("Access-Control-Allow-Origin", "http://localhost:3000")
+
     xhr.send(formData)
 
   }
   return (
     <form encType="multipart/form-data"
       ref={form} onSubmit={handleSubmit}>
+      <div className="prevent_click" style={{ display: preventDAC ? "block" : "none" }}>
+      </div>
       <div style={{ backgroundColor: "white" }} className="signup-container">
         <label >First Name</label>
         <input type="text" name={"first_name"} placeholder={"First Name"} required={true} id="first_name" />
@@ -104,10 +126,11 @@ const Signup = () => {
             setError(false)
 
           }} />
-        <input type="file" name="file" id="file" required={true} />
+        <input type="file" name="file" id="file"
+          required={true} />
         {error && <Alert message={error} />
         }
-        <button type="submit" ref={btn} style={{fontSize:"1.3rem"}}>
+        <button type="submit" ref={btn} style={{ fontSize: "1.3rem" }}>
           Create Account
         </button>
       </div>

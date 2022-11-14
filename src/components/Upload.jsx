@@ -4,11 +4,9 @@ const Upload = ({ toggle, setToggle, sentTo, getData }) => {
     const handleSubmit = e => {
         e.preventDefault()
         const token=sessionStorage.getItem("token")
-        // const socket = new WebSocket("ws://localhost:5000")
         const FD = form.current
         const formdata = new FormData(FD)
         formdata.append("sentTo", sentTo)
-        // formdata.append("createdBy", createdBy)
         const fileSize = formdata.get("file").size / (1024 * 1024)
         const fileType = formdata.get("file").type
         if (fileSize > 1) {
@@ -18,17 +16,17 @@ const Upload = ({ toggle, setToggle, sentTo, getData }) => {
         console.log(fileType)
         const re = /image/g
         if (!fileType.match(re)) {
+            
             alert("please upload an imae file thanks")
             return
         }
-        const url = "http://localhost:5000/upload"
+        const url = "https://messageappalaisah.herokuapp.com/upload"
         const xhr = new XMLHttpRequest()
         xhr.onload = function (e) {
             if (this.status == 200 && this.readyState == 4) {
                 console.log(this.responseText)
                 setToggle(false)
                 getData()
-                // socket.send(sentTo)
             } else {
                 // something is wrong here
                 // the picturre fail to save i

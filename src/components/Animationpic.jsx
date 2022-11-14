@@ -1,6 +1,6 @@
 import React from 'react'
 import imgsrc from '../bg-1.jpg'
-const Animationpic = ({toggle,setToggle,id}) => {
+const Animationpic = ({toggle,setToggle,src}) => {
   const handleError=e=>{
     e.target.src= imgsrc
   }
@@ -8,7 +8,7 @@ const Animationpic = ({toggle,setToggle,id}) => {
     <div className={`img-animation-container ${toggle?"":"--d-none"}`} onClick={e =>setToggle(false)}>
 
         <div className={`img-animation ${toggle?"profileA":""}`} onClick={e =>e.stopPropagation()}>
-            <img src={`http://localhost:5000/profile/${id}.jpg`} onError={handleError} alt={id} className="fit-img" />
+            <img src={src} onError={handleError} alt={"u"} className="fit-img" />
         </div>
     </div>
   )
