@@ -8,6 +8,7 @@ import Animationpic from '../components/Animationpic'
 import Upload from '../components/Upload'
 import DateFormater from '../components/DateFormater'
 import Notification from '../components/Notification'
+import imgsrc from '../bg-1.jpg'
 const Message = ({ socket }) => {
   const [src, setSrc] = useState("")
 
@@ -56,7 +57,7 @@ const Message = ({ socket }) => {
       const names = first_name + " " + second_name
       setName(names)
       setLoading(false)
-      
+
       const _res = await fetch("https://messageappalaisah.herokuapp.com/profile/" + sentTo)
       const { image } = await _res.json()
       console.log(image)
@@ -95,9 +96,13 @@ const Message = ({ socket }) => {
     if (res.ok) {
       const { message: { _id } } = await res.json()
       console.log(_id)
+      socket.onclose = function () {
+        socket = new WebSocket("wss://messageappalaisah.herokuapp.com")
+      }
       socket.send(
         sentTo + "-" + createdBy + "-" + _id
       )
+      
     }
     return
 
@@ -245,7 +250,9 @@ const Message = ({ socket }) => {
   }
 
 
-
+  const handleError=e=>{
+    e.target.src= imgsrc
+  }
 
   const fd = (arr, i) => (i + 1) >= arr.length - 1 ? arr.length - 1 : (i + 1)
   const FD = (date) => new Date(date).toLocaleDateString()
@@ -371,7 +378,7 @@ const Message = ({ socket }) => {
               })
               e.stopPropagation()
             }
-          } />
+          } onError={handleError} />
         </div>
       </div>
       <div className="message-inner-chart-box" style={{ backgroundColor: "white" }}

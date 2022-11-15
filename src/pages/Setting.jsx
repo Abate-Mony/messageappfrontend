@@ -4,6 +4,9 @@ import imgsrc from '../bg-1.jpg'
 import { useNavigate } from 'react-router-dom'
 import "./style.css"
 const Setting = () => {
+
+
+
   const [src, setSrc] = useState("")
 
   const [radius, setRadius] = useState(90)
@@ -37,7 +40,9 @@ const Setting = () => {
     sessionStorage.removeItem("users")
     navigate("/auth")
   }
-
+  const handleError = e => {
+    e.target.src = imgsrc
+  }
   const url = "https://messageappalaisah.herokuapp.com/auth/userinfo"
   const token = sessionStorage.getItem("token")
   async function getUsers() {
@@ -55,10 +60,10 @@ const Setting = () => {
         "Authorization": `doris ${token}`
       }
     })
-    const _res=  await fetch("https://messageappalaisah.herokuapp.com/profile/" + id)
-    const {image} = await _res.json()
+    const _res = await fetch("https://messageappalaisah.herokuapp.com/profile/" + id)
+    const { image } = await _res.json()
     console.log(image)
-    setSrc("https://messageappalaisah.herokuapp.com/profile/image/"+image)
+    setSrc("https://messageappalaisah.herokuapp.com/profile/image/" + image)
     const { user_names: { first_name, second_name, full_names }, email, createdAt } = await response.json()
     setUser({
       ... { first_name, second_name, full_names, email, createdAt }
@@ -229,7 +234,7 @@ const Setting = () => {
           </h3>
         </div>
         <div role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style={{ "--value": radius }}>
-          <img src={src} alt={id} />
+          <img src={src} alt={"0"} onError={handleError}/>
         </div>
 
       </div>

@@ -9,11 +9,11 @@ const Upload = ({ toggle, setToggle, sentTo, getData }) => {
         formdata.append("sentTo", sentTo)
         const fileSize = formdata.get("file").size / (1024 * 1024)
         const fileType = formdata.get("file").type
-        if (fileSize > 1) {
-            alert("please upload an image with less than 1mb")
-            return
-        }
-        console.log(fileType)
+        // if (fileSize > 1) {
+        //     alert("please upload an image with less than 1mb")
+        //     return
+        // }
+        // console.log(fileType)
         const re = /image/g
         if (!fileType.match(re)) {
             
