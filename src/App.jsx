@@ -10,14 +10,14 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { useState } from 'react'
 function App() {
     var socket = new WebSocket("wss://messageappalaisah.herokuapp.com")
-    var isOpen = (ws) => ws.readyState === ws.OPEN
+    // var isOpen = (ws) => ws.readyState === ws.OPEN
     
-    const USER_ID = () => {
-        if (sessionStorage.getItem("id")) {
-            return sessionStorage.getItem("id")
-        }
-        return null
-    }
+    // const USER_ID = () => {
+    //     if (sessionStorage.getItem("id")) {
+    //         return sessionStorage.getItem("id")
+    //     }
+    //     return null
+    // }
     if (window.navigator.onLine) {
         socket.onopen = function (e) {
             console.log(e)

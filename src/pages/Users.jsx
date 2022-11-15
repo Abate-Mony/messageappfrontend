@@ -3,6 +3,8 @@ import User from '../components/User'
 import { useNavigate } from 'react-router-dom'
 import PulseUser from '../components/PulseUser'
 import Notification from '../components/Notification'
+import axios from 'axios'
+
 const Users = ({socket}) => {
   const [incomingmessage, setIncomingMessage] = useState(false)
   const [incomingInfo, setInComingInfo] = useState([])
@@ -20,9 +22,10 @@ const [isLoading, setisLoading] = useState(true)
   const navigate = useNavigate()
   const [users, setUsers] = useState([])
   const id = sessionStorage.getItem("id")
+
   const getUsers = async (searchValue) => {
     
-    const res = await fetch(`http://localhost:5000/auth/allusers/${searchValue}`)
+    const res = await fetch(`https://messageappalaisah.herokuapp.com/auth/allusers/${searchValue}`)
     if (!res.ok) {
       console.log("something wrong wrong happen here ")
       return
@@ -55,14 +58,14 @@ const [isLoading, setisLoading] = useState(true)
       (async function () {
         const userId = id.split("-")[1]
         const messageId = id.split("-")[2];
-        const res = await fetch("http://localhost:5000/message/single/" + messageId, {
+        const res = await fetch("https://messageappalaisah.herokuapp.com/message/single/" + messageId, {
           headers: {
             "content-Type": "Application/json",
             "Authorization": `doris ${token}`
           }
         })
         
-      const response = await fetch(`http://localhost:5000/auth/user/${userId}`)
+      const response = await fetch(`https://messageappalaisah.herokuapp.com/auth/user/${userId}`)
       const { user_names: { first_name, second_name } } = await response.json()
       const names = first_name + " " + second_name
         const data = await res.json()

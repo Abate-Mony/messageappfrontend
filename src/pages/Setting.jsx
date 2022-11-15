@@ -38,7 +38,7 @@ const Setting = () => {
     navigate("/auth")
   }
 
-  const url = "http://localhost:5000/auth/userinfo"
+  const url = "https://messageappalaisah.herokuapp.com/auth/userinfo"
   const token = sessionStorage.getItem("token")
   async function getUsers() {
     const res = await fetch(url, {
@@ -49,16 +49,16 @@ const Setting = () => {
     })
     const data = await res.json()
     setInfo({ ...data })
-    const response = await fetch("http://localhost:5000/auth/user/" + id, {
+    const response = await fetch("https://messageappalaisah.herokuapp.com/auth/user/" + id, {
       headers: {
         "content-Type": "Application/json",
         "Authorization": `doris ${token}`
       }
     })
-    const _res=  await fetch("http://localhost:5000/profile/" + id)
+    const _res=  await fetch("https://messageappalaisah.herokuapp.com/profile/" + id)
     const {image} = await _res.json()
     console.log(image)
-    setSrc("http://localhost:5000/profile/image/"+image)
+    setSrc("https://messageappalaisah.herokuapp.com/profile/image/"+image)
     const { user_names: { first_name, second_name, full_names }, email, createdAt } = await response.json()
     setUser({
       ... { first_name, second_name, full_names, email, createdAt }

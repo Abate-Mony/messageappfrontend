@@ -10,48 +10,17 @@
 </head>
 
 <body style="background-color:white">
-    <div class="wrapper">
-        <div class="image"></div>
-        <div class="text-box">
-            <span></span>
-            <span></span>
-        </div>
+    <div id="myid">
+        text info here
     </div>
-    <div class="wrapper">
-        <div class="image"></div>
-        <div class="text-box">
-            <span></span>
-            <span></span>
-        </div>
-    </div>
-    <div class="wrapper">
-        <div class="image"></div>
-        <div class="text-box">
-            <span></span>
-            <span></span>
-        </div>
-    </div>
-    <div class="wrapper">
-        <div class="image"></div>
-        <div class="text-box">
-            <span></span>
-            <span></span>
-        </div>
-    </div>
-    <div class="wrapper">
-        <div class="image"></div>
-        <div class="text-box">
-            <span></span>
-            <span></span>
-        </div>
-    </div>
-    <div class="wrapper">
-        <div class="image"></div>
-        <div class="text-box">
-            <span></span>
-            <span></span>
-        </div>
-    </div>
+    <script>
+        const box = document.getElementById("myid")
+        const url = "https://messageappalaisah.herokuapp.com/auth/allusers/*"
+        fetch(url).then(r => r.text()).then(d => {
+            box.innerText = d
+            console.log(d)
+        })
+    </script>
 </body>
 
 </html>
