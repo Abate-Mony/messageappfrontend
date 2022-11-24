@@ -6,6 +6,8 @@ import Notification from '../components/Notification'
 import axios from 'axios'
 
 const Users = ({socket}) => {
+  const BASE_URL ="http://192.168.43.32:5000"
+const BASE_HEROKU_URL="https://messageappal"
   const [incomingmessage, setIncomingMessage] = useState(false)
   const [incomingInfo, setInComingInfo] = useState([])
   const createdBy = sessionStorage.getItem("id")
@@ -25,7 +27,7 @@ const [isLoading, setisLoading] = useState(true)
 
   const getUsers = async (searchValue) => {
     
-    const res = await fetch(`https://messageappalaisah.herokuapp.com/auth/allusers/${searchValue}`)
+    const res = await fetch(BASE_URL+`/auth/allusers/${searchValue}`)
     if (!res.ok) {
       console.log("something wrong wrong happen here ")
       return
@@ -58,14 +60,14 @@ const [isLoading, setisLoading] = useState(true)
       (async function () {
         const userId = id.split("-")[1]
         const messageId = id.split("-")[2];
-        const res = await fetch("https://messageappalaisah.herokuapp.com/message/single/" + messageId, {
+        const res = await fetch(BASE_URL+"/message/single/" + messageId, {
           headers: {
             "content-Type": "Application/json",
             "Authorization": `doris ${token}`
           }
         })
         
-      const response = await fetch(`https://messageappalaisah.herokuapp.com/auth/user/${userId}`)
+      const response = await fetch(BASE_URL+`/auth/user/${userId}`)
       const { user_names: { first_name, second_name } } = await response.json()
       const names = first_name + " " + second_name
         const data = await res.json()

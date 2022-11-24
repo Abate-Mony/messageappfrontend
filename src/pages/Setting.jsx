@@ -4,8 +4,8 @@ import imgsrc from '../bg-1.jpg'
 import { useNavigate } from 'react-router-dom'
 import "./style.css"
 const Setting = () => {
-
-
+const BASE_URL ="http://192.168.43.32:5000"
+const BASE_HEROKU_URL="https://messageappal"
 
   const [src, setSrc] = useState("")
 
@@ -43,7 +43,7 @@ const Setting = () => {
   const handleError = e => {
     e.target.src = imgsrc
   }
-  const url = "https://messageappalaisah.herokuapp.com/auth/userinfo"
+  const url = BASE_URL+"/auth/userinfo"
   const token = sessionStorage.getItem("token")
   async function getUsers() {
     const res = await fetch(url, {
@@ -54,16 +54,16 @@ const Setting = () => {
     })
     const data = await res.json()
     setInfo({ ...data })
-    const response = await fetch("https://messageappalaisah.herokuapp.com/auth/user/" + id, {
+    const response = await fetch(BASE_URL+"/auth/user/" + id, {
       headers: {
         "content-Type": "Application/json",
         "Authorization": `doris ${token}`
       }
     })
-    const _res = await fetch("https://messageappalaisah.herokuapp.com/profile/" + id)
+    const _res = await fetch(BASE_URL+"/profile/" + id)
     const { image } = await _res.json()
     console.log(image)
-    setSrc("https://messageappalaisah.herokuapp.com/profile/image/" + image)
+    setSrc(BASE_URL+"/profile/image/" + image)
     const { user_names: { first_name, second_name, full_names }, email, createdAt } = await response.json()
     setUser({
       ... { first_name, second_name, full_names, email, createdAt }

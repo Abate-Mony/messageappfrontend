@@ -8,11 +8,7 @@ const Notification = ({ incomingmessage, incomingInfo }) => {
     return (
         <div className={`notification-box ${incomingmessage && "incomingmessage"}`}
             onClick={e => navigate(`/message/${userId}`)}>
-
-
-
             <div className="container">
-
                 <div className="wrapper-notification">
                     <div className="image" style={{ overflow: "hidden" }}>
                         <img src={imgsrc} alt="dfimage" className="fit-img" />

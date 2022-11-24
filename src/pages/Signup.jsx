@@ -9,7 +9,10 @@ const Signup = () => {
   const btn = useRef(null)
   const [error, setError] = useState(false)
   const [preventDAC, setDAC] = useState(false)
+  const [file,setFile]=useState("")
   const handleSubmit = async (e) => {
+    const BASE_URL = "http://192.168.43.32:5000"
+    const BASE_HEROKU_URL = "https://messageappal"
     // setError("plwase wait ")
     setDAC(true)
     e.preventDefault()
@@ -59,8 +62,6 @@ const Signup = () => {
       console.log("something happened ")
     }
 
-    // res.header("Access-Control-Allow-Origin", "http://localhost:5501"); // update to match the domain you will make the request from
-    // res.send(response.data);
 
 
 
@@ -69,10 +70,7 @@ const Signup = () => {
 
 
 
-
-
-
-    xhr.open("POST", "https://messageappalaisah.herokuapp.com/auth/signup", true)
+    xhr.open("POST", BASE_URL + "/auth/signup", true)
     xhr.setRequestHeader("Access-Control-Allow-Origin", "http://localhost:3000")
 
     xhr.send(formData)
@@ -83,15 +81,27 @@ const Signup = () => {
       ref={form} onSubmit={handleSubmit}>
       <div className="prevent_click" style={{ display: preventDAC ? "block" : "none" }}>
       </div>
-      <div style={{ backgroundColor: "white" }} className="signup-container">
-        <label >First Name</label>
-        <input type="text" name={"first_name"} placeholder={"First Name"} required={true} id="first_name" />
-        <label >Second Name</label>
-        <input type="text" name={"second_name"} placeholder={"Second Name"} required={true} id="second_name" />
-        <label >Email Adress</label>
-        <input type="email" name={"email"} placeholder={"Email"} id="email" required={true} />
-        <label >Password</label>
-        <input type="password" name={"password"} placeholder={"Password"}
+      <div style={{ backgroundColor: "white" }}
+       className="signup-container">
+        <div className="text_field">
+          <input type="text" name={"first_name"} required={true} id="first_name" />
+         <span></span>
+          <label >First Name</label>
+        </div>
+        <div className="text_field">
+          <input type="text" name={"second_name"} required={true} id="second_name" />
+          <span></span>
+         
+          <label >Second Name</label>
+        </div>
+        <div className="text_field">
+          <input type="email" name={"email"}
+           id="email" required={true} />
+         <span></span>
+          <label  htmlFor="email">Email Adress</label>
+        </div>
+        <div className="text_field">
+        <input type="password" name={"password"}
           ref={password1} onChange={e => {
             if (password2.current.value.length >= 1) {
               if (e.target.value !== password2.current.value) {
@@ -103,14 +113,19 @@ const Signup = () => {
             }
 
             if (e.target.value.length <= 3 && e.target.value >= 1) {
-              setError("password must be greater thanor equal to 4")
+              setError("password must be greater or equal to 4")
               return
             }
             setError(false)
           }} required={true} />
-        <label htmlFor="">Confirm password</label>
+         <span></span>
+        <label htmlFor="">password</label>
+        </div>
+
+
+        <div className="text_field">
         <input type="password" name="password2"
-          placeholder={"Confirm Password"} ref={password2} onChange={e => {
+           ref={password2} onChange={e => {
 
             if (password1.current.value.length >= 1) {
               if (e.target.value !== password1.current.value) {
@@ -124,13 +139,18 @@ const Signup = () => {
               return
             }
             setError(false)
-
-          }} />
+          }} required />
+         <span></span>
+         <label htmlFor="">Confirm password</label>
+        {/* <label htmlFor="password2">Confirm password</label> */}
+        </div>
         <input type="file" name="file" id="file"
-          required={true} />
+          required={true} accept={"image/*"} onChange={e=>[console.log(e.target.files[0].name),setFile(e.target.files[0].name)]} />
+      <label htmlFor="file" id="label_for_file" >{!file?"choose an image file":file} </label>
+
         {error && <Alert message={error} />
         }
-        <button type="submit" ref={btn} style={{ fontSize: "1.3rem" }}>
+        <button type="submit" ref={btn} style={{ fontSize: "1.1rem" ,borderRadius:"0.5rem"}}>
           Create Account
         </button>
       </div>

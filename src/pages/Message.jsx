@@ -10,7 +10,10 @@ import DateFormater from '../components/DateFormater'
 import Notification from '../components/Notification'
 import imgsrc from '../bg-1.jpg'
 const Message = ({ socket }) => {
-  const [src, setSrc] = useState("")
+
+  const BASE_URL ="http://192.168.43.32:5000"
+  const BASE_HEROKU_URL="https://messageappal"
+    const [src, setSrc] = useState("")
 
   const [typing, setTyping] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -37,7 +40,7 @@ const Message = ({ socket }) => {
   const [incomingmessage, setIncomingMessage] = useState(false)
   const [incomingInfo, setInComingInfo] = useState("")
   const getData = async () => {
-    const res = await fetch("https://messageappalaisah.herokuapp.com/message/" + sentTo, {
+    const res = await fetch(BASE_URL+"/message/" + sentTo, {
       headers: {
         "content-Type": "Application/json",
         "Authorization": `doris ${token}`
@@ -52,16 +55,16 @@ const Message = ({ socket }) => {
     if (res.ok) {
       const data = await res.json()
       __setMessage([...data.message])
-      const response = await fetch(`https://messageappalaisah.herokuapp.com/auth/user/${sentTo}`)
+      const response = await fetch(BASE_URL+`/auth/user/${sentTo}`)
       const { user_names: { first_name, second_name } } = await response.json()
       const names = first_name + " " + second_name
       setName(names)
       setLoading(false)
 
-      const _res = await fetch("https://messageappalaisah.herokuapp.com/profile/" + sentTo)
+      const _res = await fetch(BASE_URL+"/profile/" + sentTo)
       const { image } = await _res.json()
       console.log(image)
-      setSrc("https://messageappalaisah.herokuapp.com/profile/image/" + image)
+      setSrc(BASE_URL+"/profile/image/" + image)
     }
   }
   const sendMessage = async () => {
@@ -76,7 +79,7 @@ const Message = ({ socket }) => {
     const message = _message.current.value
     _message.current.value = ""
 
-    const res = await fetch("https://messageappalaisah.herokuapp.com/message", {
+    const res = await fetch(BASE_URL+"/message", {
       method: "post",
       headers: {
         "content-Type": "Application/json",
@@ -97,7 +100,7 @@ const Message = ({ socket }) => {
       const { message: { _id } } = await res.json()
       console.log(_id)
       socket.onclose = function () {
-        socket = new WebSocket("wss://messageappalaisah.herokuapp.com")
+        socket = new WebSocket("ws://messageappalaisah.herokuapp.com")
       }
       socket.send(
         sentTo + "-" + createdBy + "-" + _id
@@ -125,14 +128,14 @@ const Message = ({ socket }) => {
         const userId = id.split("-")[1]
         const messageId = id.split("-")[2];
 
-        const res = await fetch("https://messageappalaisah.herokuapp.com/message/single/" + messageId, {
+        const res = await fetch(BASE_URL+"/message/single/" + messageId, {
           headers: {
             "content-Type": "Application/json",
             "Authorization": `doris ${token}`
           }
         })
 
-        const response = await fetch(`https://messageappalaisah.herokuapp.com/auth/user/${userId}`)
+        const response = await fetch(BASE_URL+`/auth/user/${userId}`)
         const { user_names: { first_name, second_name } } = await response.json()
         const names = first_name + " " + second_name
         const data = await res.json()
@@ -287,8 +290,8 @@ const Message = ({ socket }) => {
       return <span key={message._id}
       >
         {printDate(arr, index)}
-        {message.createdBy === createdBy ? (<Sendmessage imgsrc={message.name} />) :
-          (<Recievemessage imgsrc={message.name} />)
+        {message.createdBy === createdBy ? (<Sendmessage imgsrc={message.url} />) :
+          (<Recievemessage imgsrc={message.url} />)
         }</span>
     }
     else if ((createdBy === message.createdBy)) {
@@ -353,7 +356,7 @@ const Message = ({ socket }) => {
       </span>
 
       <Notification incomingmessage={incomingmessage} incomingInfo={incomingInfo} />
-      <Upload toggle={toggleFile} setToggle={setToggleFile} sentTo={sentTo} getData={getData} />
+      <Upload toggle={toggleFile} setToggle={setToggleFile} sentTo={sentTo} getData={getData} socket={socket} />
       <Emj modal={modal} _message={_message} />
       <MoreOpton mousedown={mousedown} message={info} setMousedown={setMousedown} />
       <Animationpic toggle={profile} setToggle={setProfile} src={src} />

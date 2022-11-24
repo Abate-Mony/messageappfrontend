@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react'
 import Messagerow from '../components/Messagerow'
 import { useNavigate } from 'react-router-dom'
 const Home = ({ socket }) => {
-
+  const BASE_URL ="http://192.168.43.32:5000"
+  const BASE_HEROKU_URL="https://messageappal"
   const navigate = useNavigate()
-  const url = "https://messageappalaisah.herokuapp.com/auth/users"
+  const url = BASE_URL+"/auth/users"
   const [users, setUsers] = useState([])
   const token = sessionStorage.getItem("token")
 

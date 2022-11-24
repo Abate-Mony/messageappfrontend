@@ -2,6 +2,8 @@ import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Alert from '../components/Alert'
 const Login = () => {
+  const BASE_URL = "http://192.168.43.32:5000"
+  const BASE_HEROKU_URL = "https://messageappal"
   const navigate = useNavigate()
   const password = useRef(null)
   const email = useRef(null)
@@ -35,11 +37,11 @@ const Login = () => {
       btn.current.innerHTML = text.slice(0, Math.abs(i))
       i > text.length - 1 ? i *= -1 : i += 1
     }, 200)
-    const res = await fetch("https://messageappalaisah.herokuapp.com/auth/login", {
+    const res = await fetch(BASE_URL + "/auth/login", {
       method: "post",
       headers: {
-        "content-Type": "Application/json",
-        "Access-Control-Allow-Origin": "https://messageappalaisah.herokuapp.com"
+        "content-Type": "Application/json"
+        // "Access-Control-Allow-Origin": BASE_URL+""
       }
       , body: JSON.stringify({
         password: password.current.value,
@@ -67,20 +69,29 @@ const Login = () => {
     <div style={{ backgroundColor: "white" }} className="login-container">
       <div className="prevent_click" style={{ display: preventDAC ? "block" : "none" }}>
       </div>
-      <label >Email Address</label>
-      <input type="email" required={true}
-        name="email" placeholder={"Email Address"} ref={email} />
-      <label>Password</label>
-      <input type="password" name="password" placeholder={"Enter Password"} ref={password}
-        required={true} onChange={e => {
-          if (e.target.value.length <= 3 && e.target.value >= 1) {
-            setError("password must be greater thanor equal to 4")
-            return
-          }
-          setError(false)
-        }} />
+      <div className="text_field">
+        <input type="email" required={true}
+          name="email" ref={email} />
+        <span></span>
+        <label >Email Address</label>
+
+      </div>
+      <div className="text_field">
+
+        <input type="password" name="password" ref={password}
+          required={true} onChange={e => {
+            if (e.target.value.length <= 3 && e.target.value >= 1) {
+              setError("password must be greater thanor equal to 4")
+              return
+            }
+            setError(false)
+          }} />
+        <span></span>
+        <label>Password</label>
+
+      </div>
       {error && <Alert message={error} />}
-      <button type="button" onClick={loginUser} ref={btn} style={{ fontSize: "1.3rem" }}>
+      <button type="button" onClick={loginUser} ref={btn} style={{ fontSize: "1.1rem" }}>
         Login
       </button>
     </div>

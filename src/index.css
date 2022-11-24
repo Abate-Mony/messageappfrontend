@@ -488,12 +488,12 @@ body {
     margin: 4px 5px;
     user-select: none;
     overflow: hidden;
+    font-size: calc(var(--fs-6) + 0.3rem);
 }
 
 .recieve-message {
     border-radius: 10px 10px 10px 0px;
     color: #fff;
-    /* box-shadow: 0px 0px 20px 1px gray; */
     margin-left: 1rem;
     background: linear-gradient( to right, var(--bg-color-1), blue, var(--bg-color-1));
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -709,8 +709,8 @@ body {
 .signup-container {
     display: flex;
     flex-direction: column;
-    padding: 2rem 1rem;
-    gap: 0.6rem;
+    padding: 2rem 2rem;
+    gap: 1rem;
 }
 
 .login-container input,
@@ -718,11 +718,11 @@ body {
 .signup-container input,
 .signup-container button {
     padding: 0.6rem 1rem;
-    border-radius: 0.5rem;
+    /* border-radius: 0.5rem; */
     border: 1px solid transparent;
-    /* box-shadow: 0 5px 5px 0 var(--bg-color-1); */
-    box-shadow: 0 4px 1px 0 rgba(5, 5, 46, 0.1), 0 10px 20px 0 rgba(5, 5, 46, 0.19);
+    /* box-shadow: 0 1px 1px 3px rgba(5, 5, 46, 0.1); */
     outline: none;
+    width: 100%;
 }
 
 .login-container input::placeholder,
@@ -732,7 +732,7 @@ body {
 
 .login-container input:focus {
     border: none;
-    box-shadow: 0 0 5px 0 gray;
+    /* box-shadow: 0 0 5px 0 gray; */
 }
 
 .login-container label,
@@ -753,21 +753,96 @@ body {
     background: linear-gradient( to right, var(--bg-color-1), blue, var(--bg-color-1));
 }
 
+.text_field {
+    position: relative;
+    border-bottom: 2px solid #adadad;
+    /* margin: 30px 0; */
+}
+
+.text_field input {
+    width: 100%;
+    padding: 0 5px;
+    height: 40px;
+    font-size: 1rem;
+    border: none;
+    background: none;
+    outline: none;
+    /* border: 1px solid silver; */
+}
+
+.text_field label {
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    /* color: #adadad; */
+    /* color: black; */
+    color: var(--bg-color-1);
+    transform: translateY(-50%);
+    font-size: 0.9rem;
+    pointer-events: none;
+    transition: 0.5s;
+}
+
+.text_field span::before {
+    content: "";
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    width: 100%;
+    height: 3px;
+    background: #2691d9;
+    width: 0%;
+    transition: all 0.6s ease;
+}
+
+.text_field input:focus~label,
+.text_field input:valid~label {
+    top: -5px;
+    color: #2691d9;
+}
+
+.text_field input:focus~span::before,
+.text_field input:valid~span::before {
+    width: 100%;
+    left: 0;
+}
+
+.signup-container #file {
+    width: fit-content;
+    border-radius: 0.6rem;
+    box-shadow: 0 10px 8px 0 rgba(5, 5, 46, 0.2), 0 10px 20px 0 rgba(5, 5, 46, 0.19);
+    display: none;
+}
+
+#label_for_file {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    /* width: fit-content; */
+    width: 100%;
+    margin: 0 auto;
+    color: var(--bg-color-1);
+    font-size: var(--fs-5);
+    background: linear-gradient(120deg, #2980b9, #8e44ad);
+}
+
 .minHieght {
     min-height: 100vh;
 }
 
 .alert {
-    box-shadow: 0 0 5px 1px red;
-    padding: 0.5rem 0;
+    box-shadow: 0 2px 0px 0px red;
+    padding: 0.9rem 0;
     text-align: center;
-    border-radius: 0.5rem;
     margin: 0.6rem 0;
+    font-style: italic;
 }
 
 .alert h3 {
     color: red;
-    font-size: var(--fs-5);
+    font-size: calc(0.1rem + var(--fs-5));
     font-style: oblique;
 }
 

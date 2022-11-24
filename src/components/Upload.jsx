@@ -1,5 +1,8 @@
 import { useRef } from 'react'
-const Upload = ({ toggle, setToggle, sentTo, getData }) => {
+const Upload = ({ toggle, setToggle, sentTo, getData,socket }) => {
+    const BASE_URL ="http://192.168.43.32:5000"
+const BASE_HEROKU_URL="https://messageappal"
+const createdBy = sessionStorage.getItem("id")
     const form = useRef(null)
     const handleSubmit = e => {
         e.preventDefault()
@@ -20,16 +23,19 @@ const Upload = ({ toggle, setToggle, sentTo, getData }) => {
             alert("please upload an imae file thanks")
             return
         }
-        const url = "https://messageappalaisah.herokuapp.com/upload"
+        setToggle(false)
+
+        const url = BASE_URL+"/upload"
         const xhr = new XMLHttpRequest()
         xhr.onload = function (e) {
             if (this.status == 200 && this.readyState == 4) {
                 console.log(this.responseText)
-                setToggle(false)
+                // setToggle(false)
                 getData()
+                socket.send(sentTo + "-" + createdBy)
             } else {
                 // something is wrong here
-                // the picturre fail to save i
+                alert("fail to save image")
                 console.log(this.responseText)
             }
         }
@@ -46,7 +52,7 @@ const Upload = ({ toggle, setToggle, sentTo, getData }) => {
             <span className="remove-btn" onClick={e => setToggle(false)}>X</span>
             <form encType="multipart/form-data"
                 className="signup-container" ref={form} onSubmit={handleSubmit}>
-                <input type="file" name="file" id="file" required={true} />
+                <input type="file" name="file" id="upload_file" accept={"image/*"} required={true} />
                 <button type="submit">Upload Image</button>
             </form>
         </div>
