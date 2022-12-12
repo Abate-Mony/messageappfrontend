@@ -9,7 +9,7 @@ const handleError=e=>{
 
   }
     return (
-        <div className="recieve-message message" style={{ background:imgsrc&&"white",Maxwidth:imgsrc&&"100%" }}>
+        <div className="recieve-message message" onClick={e =>e.target.style.backgroundColor="orange"}>
             {imgsrc?
             <img src={imgsrc} alt="mmga" onError={handleError} />
             :message

@@ -3,7 +3,7 @@ import imgsrc from '../bg-1.jpg'
 import { useNavigate } from 'react-router-dom'
 const Notification = ({ incomingmessage, incomingInfo }) => {
     const navigate = useNavigate()
-    console.log(incomingInfo)
+    // console.log(incomingInfo)
     const [userId, message, names] = incomingInfo
     return (
         <div className={`notification-box ${incomingmessage && "incomingmessage"}`}

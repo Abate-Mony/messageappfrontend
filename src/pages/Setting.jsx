@@ -3,10 +3,11 @@ import { useState, useRef, useEffect } from 'react'
 import imgsrc from '../bg-1.jpg'
 import { useNavigate } from 'react-router-dom'
 import "./style.css"
-const Setting = () => {
-const BASE_URL ="http://192.168.43.32:5000"
-const BASE_HEROKU_URL="https://messageappal"
-
+import PopUpLogout from '../components/PopUpLogout'
+const Setting = ({BASE_URL}) => {
+  // const BASE_URL = "http://192.168.43.32:5000"
+  // const BASE_HEROKU_URL = "https://messageappal"
+  const containerRef = useRef(null)
   const [src, setSrc] = useState("")
 
   const [radius, setRadius] = useState(90)
@@ -20,8 +21,15 @@ const BASE_HEROKU_URL="https://messageappal"
     setLoading: null,
     createdAt: null
   })
-
   const [state, setState] = useState(0)
+  const [scroll, setScroll] = useState(0)
+  useEffect(() => {
+    console.log(`state have change ${state}`)
+    const childrens = [...containerRef.current.querySelectorAll(".toggler-element")];
+    childrens.forEach((child, index) => {
+      child.style.transform = `translateX(-${state * 100}%)`
+    })
+  }, [state])
   const [info, setInfo] = useState({
     totalMessages: null,
     totalMessagesSent: null,
@@ -43,7 +51,44 @@ const BASE_HEROKU_URL="https://messageappal"
   const handleError = e => {
     e.target.src = imgsrc
   }
-  const url = BASE_URL+"/auth/userinfo"
+  const handleScroll = e => {
+    // var winScroll = e.target.scrollLeft
+
+
+    // var height = e.target.scrollWidth - e.target.getBoundingClientRect().width
+    // var scrolled = height <= 0 ? 100 : (winScroll / height) * 100;
+    // // console.log(scrolled, winScroll, height)
+    // setScroll(
+    //   function () {
+    //     return (
+    //       scrolled
+    //     )
+    //   }
+    // )
+    // // console.log(scroll)
+
+  }
+  const handleTouchEnd = e => {
+    console.log("touch end")
+
+    // if (scroll >= 0 && scroll <= 33) {
+    //   setState(0)
+    //   console.log("hello ending here 1")
+
+    // }
+    // if (scroll >= 33.3 && scroll <= 66) {
+    //   setState(1)
+    //   console.log("hello ending here 2")
+
+    // }
+    // if (scroll >= 66 && scroll <= 1000) {
+    //   setState(2)
+    //   console.log("hello ending here 3")
+
+
+    // }
+  }
+  const url = BASE_URL + "/auth/userinfo"
   const token = sessionStorage.getItem("token")
   async function getUsers() {
     const res = await fetch(url, {
@@ -54,16 +99,16 @@ const BASE_HEROKU_URL="https://messageappal"
     })
     const data = await res.json()
     setInfo({ ...data })
-    const response = await fetch(BASE_URL+"/auth/user/" + id, {
+    const response = await fetch(BASE_URL + "/auth/user/" + id, {
       headers: {
         "content-Type": "Application/json",
         "Authorization": `doris ${token}`
       }
     })
-    const _res = await fetch(BASE_URL+"/profile/" + id)
+    const _res = await fetch(BASE_URL + "/profile/" + id)
     const { image } = await _res.json()
-    console.log(image)
-    setSrc(BASE_URL+"/profile/image/" + image)
+    // console.log(image)
+    setSrc(BASE_URL + "/profile/image/" + image)
     const { user_names: { first_name, second_name, full_names }, email, createdAt } = await response.json()
     setUser({
       ... { first_name, second_name, full_names, email, createdAt }
@@ -73,106 +118,94 @@ const BASE_HEROKU_URL="https://messageappal"
   }
 
 
-
-  const handleToggler = (state) => {
-    if (state === 0) {
-      return (
-        <>
-          <h2 style={{
-            textAlign: "center",
-            padding: "1rem", fontSize: "2rem", lineHeight: "2rem"
-          }}>Account Information</h2>
+  const _handleToggler = position => {
+    return (<>
+      <div className="toggler-element">
+        <h2 style={{
+          textAlign: "center",
+          padding: "1rem", fontSize: "1.5rem", lineHeight: "2rem"
+        }}>Account Information</h2>
 
 
-          <div className="information-box " style={{ border: "1px solid white" }}>
-            <div>
-              <span>CreatedAt</span>
-              <span>{new Date(user.createdAt).toLocaleDateString("en-US", {
+        <div className="information-box "
+          style={{ border: "1px solid white" }}>
+          <div>
+            <span>CreatedAt</span>
+            <span>{new Date(user.createdAt).toLocaleDateString("en-US", {
 
-              })}</span>
-            </div>
-            <div>
-              <span>Total Number  of Messages</span>
-              <span style={{ color: info.totalMessages > 0 ? "blue" : "red" }}>{info.totalMessages}</span>
-            </div>
-            <div>
-              <span >Number of Messages sent</span>
-              <span style={{ color: info.totalMessagesSent > 0 ? "blue" : "red" }}>{info.totalMessagesSent}</span>
-            </div>
-            <div>
-              <span>Number of Messages Recievemessage</span>
-              <span style={{ color: info.totalMessagesRecieved > 0 ? "blue" : "red" }}>{info.totalMessagesRecieved}</span>
-            </div>
-            <div>
-              <span>Total Number of images</span>
-              <span style={{ color: info.totalImages > 0 ? "blue" : "red" }}>{info.totalImages}</span>
-            </div>
-            <div>
-              <span>Number of images Sent</span>
-              <span style={{ color: info.totalImagesSent > 0 ? "blue" : "red" }}>{info.totalImagesSent}</span>
-            </div>
-            <div>
-              <span>Number of images Received</span>
-              <span style={{ color: info.totalImagesRecieved > 0 ? "blue" : "red" }}>{info.totalImagesRecieved}</span>
-            </div>
-
+            })}</span>
           </div>
-        </>
-      )
-    }
-    if (state === 1) {
-      // setRadius(80)
-      console.log("hello ")
-      return (
+          <div>
+            <span>Total Number  of Messages</span>
+            <span style={{ color: info.totalMessages > 0 ? "blue" : "red" }}>{info.totalMessages}</span>
+          </div>
+          <div>
+            <span >Number of Messages sent</span>
+            <span style={{ color: info.totalMessagesSent > 0 ? "blue" : "red" }}>{info.totalMessagesSent}</span>
+          </div>
+          <div>
+            <span>Number of Messages Recievemessage</span>
+            <span style={{ color: info.totalMessagesRecieved > 0 ? "blue" : "red" }}>{info.totalMessagesRecieved}</span>
+          </div>
+          <div>
+            <span>Total Number of images</span>
+            <span style={{ color: info.totalImages > 0 ? "blue" : "red" }}>{info.totalImages}</span>
+          </div>
+          <div>
+            <span>Number of images Sent</span>
+            <span style={{ color: info.totalImagesSent > 0 ? "blue" : "red" }}>{info.totalImagesSent}</span>
+          </div>
+          <div>
+            <span>Number of images Received</span>
+            <span style={{ color: info.totalImagesRecieved > 0 ? "blue" : "red" }}>{info.totalImagesRecieved}</span>
+          </div>
 
-        <>
-
-          <h2 style={{
-            textAlign: "center",
-            padding: "1rem", fontSize: "1.8rem", lineHeight: "0.4rem", color: "var(--bg-color-1)", letterSpacing: "0.1rem"
-          }}>Settings</h2>
-          <p style={{ textAlign: "center", color: "red", fontSize: "2rem" }}>
-            still coding this component
-          </p>
-        </>
-      )
-    }
-    if (state === 2) {
-      return (
-        <div className="contact-us">
-          <h2 style={{
-            textAlign: "center",
-            padding: "1rem", fontSize: "1.8rem", lineHeight: "0.4rem", color: "var(--bg-color-1)", letterSpacing: "0.1rem"
-          }}>Contact Us</h2>
-
-          <h2>
-            Email Address
-          </h2>
-          <span>
-            <a href="mailto:bateemma14@gmail.com">bateemma14@gmail.com</a>
-          </span>
-          <h2>
-            Phone Number
-          </h2>
-          <a href="tel:+237672301714">+237672301714</a>
-          <a href="tel:+237696164769">+237696164769</a>
-          <h2>
-            Github
-          </h2>
-          <span>
-            <a href="https://github.com/abate-mony">Abate mony</a>
-
-          </span>
-          <h2>
-            FaceBook
-          </h2>
-          <span>
-            <a href="https://github.com/abate-mony">Abate mony</a>
-          </span>
         </div>
-      )
-    }
+      </div>
+      <div className="toggler-element">
+        <h2 style={{
+          textAlign: "center",
+          padding: "1rem", fontSize: "1.5rem", lineHeight: "0.4rem", color: "var(--bg-color-1)", letterSpacing: "0.1rem"
+        }}>Settings</h2>
+        <p style={{ textAlign: "center", color: "red", fontSize: "2rem" }}>
+          still coding this component
 
+        </p>
+      </div>
+      <div className="toggler-element contact-us">
+        <h2 style={{
+          textAlign: "center",
+          padding: "1rem", fontSize: "1.5rem", lineHeight: "0.4rem", color: "var(--bg-color-1)", letterSpacing: "0.1rem"
+        }}>Contact Us</h2>
+
+        <h2>
+          Email Address
+        </h2>
+        <span>
+          <a href="mailto:bateemma14@gmail.com">bateemma14@gmail.com</a>
+        </span>
+        <h2>
+          Phone Number
+        </h2>
+        <a href="tel:+237672301714">+237672301714</a>
+        <a href="tel:+237696164769">+237696164769</a>
+        <h2>
+          Github
+        </h2>
+        <span>
+          <a href="https://github.com/abate-mony">Abate mony</a>
+
+        </span>
+        <h2>
+          FaceBook
+        </h2>
+        <span>
+          <a href="https://github.com/abate-mony">Abate mony</a>
+        </span>
+      </div>
+    </>
+
+    )
   }
 
 
@@ -180,7 +213,6 @@ const BASE_HEROKU_URL="https://messageappal"
 
   useEffect(() => {
     getUsers()
-    // console.log(user)
   }, [])
 
   return (
@@ -193,7 +225,7 @@ const BASE_HEROKU_URL="https://messageappal"
       }>
         logout
       </div>
-
+      <PopUpLogout modal={modal} addToggleClass={addToggleClass} toggleclass={toggleclass} toggleModal={toggleModal} handleLogout={handleLogout} />
 
       <div className={`loader-container   ${!loading ? "--d-none" : ""}`}>
         <div className="loader">
@@ -203,38 +235,28 @@ const BASE_HEROKU_URL="https://messageappal"
           <span></span>
         </div>
       </div>
-      <div className={`_modal ${!modal && "--d-none"}`}
-        onClick={e =>
-          [addToggleClass(true),
-          setTimeout(() => {
-            addToggleClass(false)
-          }, 500)
-          ]
-        }>
-        <div className={`${toggleclass ? "scale" : ""} logout-container`}
-          onClick={e => e.stopPropagation()}>
-          <h2 style={{ color: "red", textAlign: "center" }}>Logout</h2>
-          <button onClick={e => [toggleModal(false)]}>
-            no
-          </button>
-          <button onClick={handleLogout}>yes</button>
-        </div>
-      </div>
+
 
       <div className="setting-img-container" style={{ overflowX: "hidden" }}>
 
         <div className="overlay">
           <h2 style={{ letterSpacing: "0.2rem" }}>
-            {user.full_names?.split(" ")?.map(_ => _.charAt(0).toUpperCase() + _.slice(1)).join(" ") || user.first_name + " " + user.second_name}
+           <pre>
+            
+             {user.full_names?.split(" ")?.map(_ => _.charAt(0).toUpperCase() + _.slice(1)).join(" ") || user.first_name + " " + user.second_name}
+            </pre>
           </h2>
         </div>
         <div className="overlay">
           <h3 >
+            <pre>
             {user.email}
+
+            </pre>
           </h3>
         </div>
         <div role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style={{ "--value": radius }}>
-          <img src={src} alt={"0"} onError={handleError}/>
+          <img src={src} alt={"0"} onError={handleError} />
         </div>
 
       </div>
@@ -248,12 +270,15 @@ const BASE_HEROKU_URL="https://messageappal"
         <p onClick={e => [setState(2), switcher.current.style.left = "70%", setRadius(33.3)]}>
           Contact-Us
         </p>
-
-
-
       </div>
-
-      {!loading && handleToggler(state)}
+      <div className="toggler-container"
+        ref={containerRef} onScroll={handleScroll} onTouchEnd={
+          handleTouchEnd
+        } onTouchStart={e => {
+          console.log("touch start ")
+        }}>
+        {_handleToggler(state)}
+      </div>
 
     </div>
   )

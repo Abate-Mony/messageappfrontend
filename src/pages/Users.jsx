@@ -4,10 +4,11 @@ import { useNavigate } from 'react-router-dom'
 import PulseUser from '../components/PulseUser'
 import Notification from '../components/Notification'
 import axios from 'axios'
-
-const Users = ({socket}) => {
-  const BASE_URL ="http://192.168.43.32:5000"
-const BASE_HEROKU_URL="https://messageappal"
+import {FaArrowLeft} from 'react-icons/fa'
+// import FontAwesomeIcon from "react-icons/fa"
+const Users = ({socket,BASE_URL }) => {
+  // const BASE_URL ="http://192.168.43.32:5000"
+// const BASE_HEROKU_URL="https://messageappal"
   const [incomingmessage, setIncomingMessage] = useState(false)
   const [incomingInfo, setInComingInfo] = useState([])
   const createdBy = sessionStorage.getItem("id")
@@ -67,7 +68,8 @@ const [isLoading, setisLoading] = useState(true)
           }
         })
         
-      const response = await fetch(BASE_URL+`/auth/user/${userId}`)
+      const response =
+       await fetch(BASE_URL+`/auth/user/${userId}`)
       const { user_names: { first_name, second_name } } = await response.json()
       const names = first_name + " " + second_name
         const data = await res.json()
@@ -107,7 +109,7 @@ const [isLoading, setisLoading] = useState(true)
       <Notification incomingmessage={incomingmessage} incomingInfo={incomingInfo}/>
       <div className="navigate-user">
         <div className="back" onClick={e => navigate("/")}>
-          🏠
+        {/* <FontAwesomeIcon icon="fa-solid fa-magnifying-glass" /> */}
         </div>
         <div className="right" onClick={e => navigate("/setting")}>
           ⚙
@@ -124,7 +126,8 @@ const [isLoading, setisLoading] = useState(true)
           </span>
           <input type="text" id="__search"
             autoComplete="false"
-            placeholder={"please user e.g Ako Bate "} ref={search} onChange={e => {
+            placeholder={"please user e.g Ako Bate "} 
+            ref={search} onChange={e => {
               if (e.target.value.length < 1) {
                 getUsers("*")
               }
@@ -132,12 +135,15 @@ const [isLoading, setisLoading] = useState(true)
 
             onKeyUp={e => e.key === "Enter" && handleSearch()
             } />
+
           <span className="delBtn" onClick={e =>
             [getUsers("*"),
             search.current.value = ""]
           }
           >
-            ⬅
+            {/* <FaArrowLeft style={{
+              fontSize: "1.2rem", marginRight:"0.6rem"
+            }}/> */}
           </span>
         </div>
 

@@ -1,20 +1,11 @@
 import imgsrc from '../bg-1.jpg'
 import { useNavigate } from 'react-router-dom'
-import { useState, useEffect} from 'react'
+// import { useState, useEffect} from 'react'
 const Messagerow = ({ name, id, message, time }) => {
-  const [src, setSrc] = useState("")
-  useEffect(() => {
-    imageSrc()
+  // const [src, setSrc] = useState("")
+  
     
-    },[])
     
-    async function imageSrc (){
-      const _res=  await fetch("http://localhost:5000/profile/" + id)
-      const {image} = await _res.json()
-      console.log(image)
-      setSrc("http://localhost:5000/profile/image/"+image)
-      console.log(image)
-    }
   const navigate = useNavigate()
     const date = new Date(time).toLocaleDateString()
     const hour = new Date(time).toLocaleTimeString()
@@ -24,8 +15,9 @@ const Messagerow = ({ name, id, message, time }) => {
     return (
         <div className="messagebox" style={{ backgroundColor: "white" }}>
             <div className="message-img center">
-                <img src={src} onError={handleError}
-                    className="fit-img circle" style={{ width: 60 + "px", height: 60 + "px" }} alt={"rose are red"} />
+                <img src={imgsrc} onError={handleError}
+                    className="fit-img circle"
+                     style={{ width: 50 + "px", height: 50 + "px" }} alt={"rose are red"} />
             </div>
 
             <div className="message_right" onClick={e => {
@@ -33,15 +25,19 @@ const Messagerow = ({ name, id, message, time }) => {
               }}>
                 <div>
                     <h2>
-                        {name.split(" ").map(_=>_.charAt(0).toUpperCase() +_.slice(1)).join(" ")}
+                        {name.split(" ")
+                        .map(_=>_.charAt(0).toUpperCase()
+                         +_.slice(1)).join(" ")}
                     </h2>
-                    <span>{date === (new Date().toLocaleDateString()) ? hour : date}</span>
+                    <span style={{paddingLeft:"0.4rem"}}>{date === (new Date()
+                    .toLocaleDateString()) 
+                    ? hour : date}</span>
 
                 </div>
                 <div>
                     <p>{message.length > 50 ? message.slice(0, 50) + "..." : message}</p>
-                    <span className="number  circle">
-                        1
+                    <span className="number-  circle-">
+                        
                     </span>
                 </div>
             </div>

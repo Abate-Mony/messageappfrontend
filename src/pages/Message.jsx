@@ -9,11 +9,11 @@ import Upload from '../components/Upload'
 import DateFormater from '../components/DateFormater'
 import Notification from '../components/Notification'
 import imgsrc from '../bg-1.jpg'
-const Message = ({ socket }) => {
+import { FaArrowLeft, FaChevronLeft, FaAngleDown, FaAngleUp } from 'react-icons/fa'
+import sound from '../1.wav'
+const Message = ({ socket, BASE_URL }) => {
 
-  const BASE_URL ="http://192.168.43.32:5000"
-  const BASE_HEROKU_URL="https://messageappal"
-    const [src, setSrc] = useState("")
+  // const [src, setSrc] = useState("")
 
   const [typing, setTyping] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -30,7 +30,9 @@ const Message = ({ socket }) => {
   const createdBy = sessionStorage.getItem("id")
   const sentTo = useParams().id
   const token = sessionStorage.getItem("token")
-  const file = useRef(null)
+  const [del, setDel] = useState(false)
+  const slider = useRef(null)
+  // const file = useRef(null)
   const fileContainer = useRef(null)
   const [timer, setTimer] = useState(null)
   const indicator = useRef(null)
@@ -39,8 +41,22 @@ const Message = ({ socket }) => {
   var _timer = null
   const [incomingmessage, setIncomingMessage] = useState(false)
   const [incomingInfo, setInComingInfo] = useState("")
+  const [selectedId, setSelectedId] = useState([])
+  // const parentContainer=useRef(null)
+  function handleSelect(e) {
+    e.stopPropagation()
+    // const elmSelected=e.target
+    // console.log(e.target.innerHTML)
+    // elmSelected.style.backgroundColor="orange"
+    // e.preventDefault()
+  }
+  useEffect(() => {
+    if (del) {
+      slider.current.style.left = 0
+    }
+  }, [del])
   const getData = async () => {
-    const res = await fetch(BASE_URL+"/message/" + sentTo, {
+    const res = await fetch(BASE_URL + "/message/" + sentTo, {
       headers: {
         "content-Type": "Application/json",
         "Authorization": `doris ${token}`
@@ -55,16 +71,16 @@ const Message = ({ socket }) => {
     if (res.ok) {
       const data = await res.json()
       __setMessage([...data.message])
-      const response = await fetch(BASE_URL+`/auth/user/${sentTo}`)
+      const response = await fetch(BASE_URL + `/auth/user/${sentTo}`)
       const { user_names: { first_name, second_name } } = await response.json()
       const names = first_name + " " + second_name
       setName(names)
       setLoading(false)
 
-      const _res = await fetch(BASE_URL+"/profile/" + sentTo)
-      const { image } = await _res.json()
-      console.log(image)
-      setSrc(BASE_URL+"/profile/image/" + image)
+      // const _res = await fetch(BASE_URL + "/profile/" + sentTo)
+      // const { image } = await _res.json()
+      // console.log(image)
+      // setSrc(BASE_URL + "/profile/image/" + image)
     }
   }
   const sendMessage = async () => {
@@ -79,7 +95,7 @@ const Message = ({ socket }) => {
     const message = _message.current.value
     _message.current.value = ""
 
-    const res = await fetch(BASE_URL+"/message", {
+    const res = await fetch(BASE_URL + "/message", {
       method: "post",
       headers: {
         "content-Type": "Application/json",
@@ -97,15 +113,20 @@ const Message = ({ socket }) => {
       return
     }
     if (res.ok) {
+
       const { message: { _id } } = await res.json()
       console.log(_id)
       socket.onclose = function () {
         socket = new WebSocket("ws://messageappalaisah.herokuapp.com")
       }
+      if (!isOpen(socket)) {
+        window.location.refresh()
+        return
+      }
       socket.send(
         sentTo + "-" + createdBy + "-" + _id
       )
-      
+
     }
     return
 
@@ -113,8 +134,11 @@ const Message = ({ socket }) => {
 
   socket.onmessage = function (e) {
     const id = e.data
+
     if (id.split("-")[0] == createdBy) {
       getData()
+      const audio = new Audio(sound)
+      audio.play()
       _message && messageBox.current.scrollTo({
         top: 4000000,
         left: 0,
@@ -128,19 +152,18 @@ const Message = ({ socket }) => {
         const userId = id.split("-")[1]
         const messageId = id.split("-")[2];
 
-        const res = await fetch(BASE_URL+"/message/single/" + messageId, {
+        const res = await fetch(BASE_URL + "/message/single/" + messageId, {
           headers: {
             "content-Type": "Application/json",
             "Authorization": `doris ${token}`
           }
         })
 
-        const response = await fetch(BASE_URL+`/auth/user/${userId}`)
+        const response = await fetch(BASE_URL + `/auth/user/${userId}`)
         const { user_names: { first_name, second_name } } = await response.json()
         const names = first_name + " " + second_name
         const data = await res.json()
         const _Message = data.message[0].message
-        // console.log(data.message[0].message)
 
 
 
@@ -180,6 +203,8 @@ const Message = ({ socket }) => {
     //   console.log("online here")
     //   // setOnline(true)
     // }
+
+
   }
   function scrollMessageBox(top = 4000000) {
     _message && messageBox.current.scrollTo({
@@ -208,24 +233,59 @@ const Message = ({ socket }) => {
   }
   const handleMouseup = e => {
     clearTimeout(timer)
-    console.log("clearing timeout")
+    // console.log("clearing timeout")
     e.stopPropagation()
   }
-
+  function isOpen(ws) { return ws.readyState === ws.OPEN }
   const handleTyping = (sn, cb) => {
     socket.send(sn + "|" + cb)
+  }
+  const handleDeleteAll = async (e) => {
+    // var tempMessages = __messages
+    // let i = 0
+    // for (i = 0; i < tempMessages.length; i++) {
+    //   for (let j = 0; j < selectedId.length; ++j) {
+    //     if (tempMessages[i]._id == selectedId[j]) {
+    //       tempMessages.splice(i, 1)
+    //     }
+    //   }
+    // }
+
+      const res=await fetch(BASE_URL + "/message",{
+        method:"delete",
+        headers:{
+          "content-Type":"Application/json",
+          authorization:`doris ${token}`
+        },
+        body:JSON.stringify({
+          list:selectedId
+        })
+      })
+      if(!res.ok){
+        console.log("fail to delete messages")
+      }
+      const data = await res.text()
+      console.log(data)
+      getData()
+      // alert("enter here")
+    setSelectedId([])
+    handleDeselect(e)
+  }
+  const handleDeselect = e => {
+    slider.current.style.left = "-100%"
+    setDel(false)
+    // setSelectedId([])
+    const elements = [...messageBox.current.querySelectorAll(".flex-end")]
+    elements.forEach((message, index, arr) => {
+      if (message.style.backgroundColor == "gray") {
+        message.style.backgroundColor = "white"
+      }
+
+    })
   }
   const handleToggleFile = e => {
     handleTyping(sentTo, createdBy)
 
-    if (e.target.value.length >= 1) {
-      fileContainer.current.style.gridTemplateColumns = `10% 75% 15%
-    `
-      file.current.style.display = "none"
-    } else {
-      file.current.style.display = "block"
-      fileContainer.current.style.gridTemplateColumns = `10% 70% 10% 10%`
-    }
     if (e.key === "Enter") {
       sendMessage()
 
@@ -241,9 +301,9 @@ const Message = ({ socket }) => {
     indicator.current.style.width = `${scrolled}%`
     if (scrolled <= 70) {
       scrollbottom.current.style.right = "2rem"
-      scrolltop.current.style.right = "-2rem"
+      scrolltop.current.style.right = "-5rem"
     } else {
-      scrollbottom.current.style.right = "-2rem"
+      scrollbottom.current.style.right = "-5rem"
       scrolltop.current.style.right = "2rem"
     }
 
@@ -253,8 +313,8 @@ const Message = ({ socket }) => {
   }
 
 
-  const handleError=e=>{
-    e.target.src= imgsrc
+  const handleError = e => {
+    e.target.src = imgsrc
   }
 
   const fd = (arr, i) => (i + 1) >= arr.length - 1 ? arr.length - 1 : (i + 1)
@@ -300,11 +360,16 @@ const Message = ({ socket }) => {
           handleMousedown(message)
           e.stopPropagation()
         }}
+        onDoubleClick={e=>{
+          handleMousedown(message)
+          e.stopPropagation()
+        }}
         onTouchEnd={handleMouseup}
       >
         {printDate(arr, index, createdBy)}
 
-        {<Sendmessage message={message.message} />}
+        {<Sendmessage message={message.message} id={message._id} 
+        selectedId={selectedId} setSelectedId={setSelectedId} del={del} setDel={setDel}/>}
         {printSpaceBetweenMessages(arr, index, createdBy)}
 
       </span>
@@ -317,13 +382,15 @@ const Message = ({ socket }) => {
           handleMousedown(message)
           e.stopPropagation()
         }}
+        onDoubleClick={e=>{
+          handleMousedown(message)
+          e.stopPropagation()
+        }}
         onTouchEnd={handleMouseup}
       >
         {printDate(arr, index)}
-        {<Recievemessage message={message.message} />}
-
+        {<Recievemessage message={message.message}  />}
         {printSpaceBetweenMessages(arr, index, sentTo)}
-
       </span>
     }
   }
@@ -347,22 +414,32 @@ const Message = ({ socket }) => {
       <span className="scrollto bottm"
         onClick={e => scrollMessageBox()}
         ref={scrollbottom}>
-        🔽
+        <FaAngleDown style={{ color: "var(--bg-color-1)", fontSize: "3rem" }} />
       </span>
       <span className="scrollto top"
         onClick={e => scrollMessageBox(0)}
         ref={scrolltop}>
-        🔝
+        <FaAngleUp style={{ color: "var(--bg-color-1)", fontSize: "3rem" }} />
+
       </span>
 
       <Notification incomingmessage={incomingmessage} incomingInfo={incomingInfo} />
       <Upload toggle={toggleFile} setToggle={setToggleFile} sentTo={sentTo} getData={getData} socket={socket} />
-      <Emj modal={modal} _message={_message} />
-      <MoreOpton mousedown={mousedown} message={info} setMousedown={setMousedown} />
-      <Animationpic toggle={profile} setToggle={setProfile} src={src} />
+
+      <MoreOpton mousedown={mousedown} message={info} setMousedown={setMousedown} 
+      BASE_URL={BASE_URL} getData={getData} del={del} setDel={setDel} />
+      <Animationpic toggle={profile} setToggle={setProfile} src={imgsrc} />
       <div className="message-inner-chart-header">
+        <span className="slide_del" ref={slider}>
+          <span onClick={
+            handleDeselect
+          }>back</span>
+          <span onClick={handleDeleteAll}>delete all selected {selectedId.length}</span>
+        </span>
         <span className="scrollindicator" ref={indicator}></span>
-        <span onClick={e => navigate("/")} className="backBtn">back</span>
+        <span onClick={e => navigate("/")} className="backBtn">
+          <FaChevronLeft style={{ fontSize: "1.5rem" }} />
+        </span>
         <div className="--name-container">
           <h2>{name}</h2>
           <div className="online-status-container">
@@ -372,7 +449,7 @@ const Message = ({ socket }) => {
         </div>
         <div className="img--">
 
-          <img src={src} alt="" onClick={
+          <img src={imgsrc} alt="" onClick={
             e => {
               setProfile(function () {
                 return (
@@ -384,7 +461,8 @@ const Message = ({ socket }) => {
           } onError={handleError} />
         </div>
       </div>
-      <div className="message-inner-chart-box" style={{ backgroundColor: "white" }}
+      <div className="message-inner-chart-box"
+        style={{ backgroundColor: "white", position: "relative" }}
         ref={messageBox} onScroll={myFunction}>
         {__messages.length > 0 ? __messages?.map(alignMessages) : <div id="hi-btn" style={{ color: "white" }} onClick={e =>
           [_message.current.value = "Hi 🙋‍♂️", sendMessage()]
@@ -395,6 +473,7 @@ const Message = ({ socket }) => {
         style={{
           backgroundColor: "var(--bg-color-1)",
         }} ref={fileContainer}>
+        <Emj modal={modal} _message={_message} />
         <div className="emj" onClick={e => {
           setModal(function () {
             return (
@@ -405,10 +484,10 @@ const Message = ({ socket }) => {
         }}>😊</div>
         <input type="text"
           placeholder="hey,press enter to send"
-          style={{ outline: "none" }} ref={_message} onKeyUp={handleToggleFile} />
-        <div className="file-btn" ref={file} onClick={e => setToggleFile(true)}>
+          style={{ outline: "none" }} ref={_message} onKeyUp={handleToggleFile} autoFocus={true} />
+        {/* <div className="file-btn" ref={file} onClick={e => setToggleFile(true)}>
           ()
-        </div>
+        </div> */}
         <div className="send_" style={{ color: "orange", textAlign: "left" }} onClick={e => {
           sendMessage()
         }} >

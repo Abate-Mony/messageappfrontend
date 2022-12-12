@@ -5,22 +5,45 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>grid system</title>
-    <link rel="stylesheet" href="../index.css">
+    <title>whatsapp clone</title>
+    <link rel="stylesheet" href="style_.css">
 </head>
 
-<body style="background-color:white">
-    <div id="myid">
-        text info here
+<body>
+    <div class="container">
+        <div class="leftSide">
+            <div class="header">
+                <div class="userimg">
+                    <img src="../bg-1.jpg" class="cover" alt="">
+                </div>
+                <ul class="nav__icons">
+                    <li>⚽</li>
+                    <li>
+                        <div class="message-container">
+
+                        </div>
+                    </li>
+                    <li>
+                        <div class="options">
+                            <span></span><span></span><span></span>
+                        </div>
+
+                    </li>
+                </ul>
+            </div>
+            <!-- search bar  -->
+            <div class="search_chat">
+                <div>
+                    <input type="text" placeholder="Searcg or start new chat"></div>
+                <span class="icon">
+
+                </span>
+            </div>
+        </div>
+        <div class="rightSide">
+
+        </div>
     </div>
-    <script>
-        const box = document.getElementById("myid")
-        const url = "https://messageappalaisah.herokuapp.com/auth/allusers/*"
-        fetch(url).then(r => r.text()).then(d => {
-            box.innerText = d
-            console.log(d)
-        })
-    </script>
 </body>
 
 </html>

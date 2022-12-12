@@ -2,7 +2,7 @@ import React from 'react'
 
 const PulseUser = () => {
     return (
-        <div>
+        <>
             <div className="wrapper">
                 <div className="image"></div>
                 <div className="text-box">
@@ -114,7 +114,7 @@ const PulseUser = () => {
                     <span></span>
                 </div>
             </div>
-        </div>
+        </>
     )
 }
 

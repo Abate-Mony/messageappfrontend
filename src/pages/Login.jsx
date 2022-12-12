@@ -1,19 +1,14 @@
 import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Alert from '../components/Alert'
-const Login = () => {
-  const BASE_URL = "http://192.168.43.32:5000"
-  const BASE_HEROKU_URL = "https://messageappal"
+const Login = ({ BASE_URL}) => {
   const navigate = useNavigate()
   const password = useRef(null)
   const email = useRef(null)
   const [error, setError] = useState("")
   const btn = useRef(null)
   const [preventDAC, setDAC] = useState(false)
-
-  // const [timer, setTimer] = useState(null)
   var timer = null
-
   const display = msg => {
     setError(msg)
     setTimeout(() => {
@@ -28,6 +23,7 @@ const Login = () => {
 
     if (!password.current.value || !email.current.value) {
       display("please provide  a password ,email")
+      setDAC(false)
       return
     }
 
@@ -37,41 +33,54 @@ const Login = () => {
       btn.current.innerHTML = text.slice(0, Math.abs(i))
       i > text.length - 1 ? i *= -1 : i += 1
     }, 200)
-    const res = await fetch(BASE_URL + "/auth/login", {
-      method: "post",
-      headers: {
-        "content-Type": "Application/json"
-        // "Access-Control-Allow-Origin": BASE_URL+""
-      }
-      , body: JSON.stringify({
-        password: password.current.value,
-        email: email.current.value
+
+
+
+    try {
+
+      const res = await fetch(BASE_URL + "/auth/login", {
+        method: "post",
+        headers: {
+          "content-Type": "Application/json"
+          // "Access-Control-Allow-Origin": BASE_URL+""
+        }
+        , body: JSON.stringify({
+          password: password.current.value,
+          email: email.current.value
+        })
       })
-    })
-    if (!res.ok) {
-      setDAC(false)
+      if (!res.ok) {
+        setDAC(false)
+        clearInterval(timer)
+        btn.current.innerHTML = "Loging"
+        const { msg } = await res.json()
+        display(msg)
+        btn.current.innerHTML = "login"
+        return
+      }
+      const { userInfo: { name, _id }, token } = await res.json()
+      sessionStorage.setItem("token", token)
+      sessionStorage.setItem("id", _id)
       clearInterval(timer)
-      btn.current.innerHTML = "Loging"
-      const { msg } = await res.json()
-      display(msg)
-      btn.current.innerHTML = "login"
-      return
+      
+      navigate("/")
+
     }
-    const { userInfo: { name, _id }, token } = await res.json()
-    sessionStorage.setItem("token", token)
-    sessionStorage.setItem("id", _id)
-    clearInterval(timer)
-    navigate("/")
+    catch (error) {
+      setDAC(false)
+
+    }
   }
 
 
   return (
     <div style={{ backgroundColor: "white" }} className="login-container">
-      <div className="prevent_click" style={{ display: preventDAC ? "block" : "none" }}>
+      <div className="prevent_click" style={{ display:
+         preventDAC ? "block" : "none" }}>
       </div>
       <div className="text_field">
         <input type="email" required={true}
-          name="email" ref={email} />
+          name="email" ref={email} autoComplete={"true"}/>
         <span></span>
         <label >Email Address</label>
 

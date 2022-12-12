@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react'
 import Messagerow from '../components/Messagerow'
 import { useNavigate } from 'react-router-dom'
-const Home = ({ socket }) => {
-  const BASE_URL ="http://192.168.43.32:5000"
-  const BASE_HEROKU_URL="https://messageappal"
+import { FaBars } from 'react-icons/fa'
+
+const Home = ({ socket, BASE_URL, BigMessages, setBigMessages }) => {
+  const [typing, setTyping] = useState(false)
+  const [timer, setTimer] = useState(null)
+
   const navigate = useNavigate()
-  const url = BASE_URL+"/auth/users"
+  const url = BASE_URL + "/auth/users"
   const [users, setUsers] = useState([])
   const token = sessionStorage.getItem("token")
 
@@ -16,6 +19,9 @@ const Home = ({ socket }) => {
         []
       ))
   }
+  
+
+
 
   async function getUsers() {
     setUsers(JSON.parse(sessionStorage.getItem("users")))
@@ -39,11 +45,26 @@ const Home = ({ socket }) => {
   socket.onmessage = function (e) {
     const id = e.data
     const createdBy = sessionStorage.getItem("id")
-    
+
     if (id.split("-")[0] == createdBy) {
-      console.log("home here")
       getUsers()
     }
+    users.map(({ name, _id, createdAt, message }, index) => {
+      if (id.split("|")[0] == createdBy && id.split("|")[1] == _id) {
+        clearTimeout(timer)
+        var tempUsers = users
+        var messageAtIndex = tempUsers[index].message
+        tempUsers[index].message = "typing ..."
+        setTyping(true)
+        setTimer(setTimeout(() => {
+          tempUsers[index].message = messageAtIndex
+          setUsers([...tempUsers])
+
+          setTyping(false)
+          clearTimeout(timer)
+        }, 500))
+      }
+    })
 
   }
   socket.onopen = function (e) {
@@ -56,24 +77,43 @@ const Home = ({ socket }) => {
       <div className="add-btn center circle" style={{ width: "50px", height: "50px" }} onClick={e => navigate("/users")}>
         +
       </div>
-        <div className="header-container">
-          <h2>
-            MESSAGES
-          </h2>
-          <span onClick={e => navigate("/setting")} className="toggleSetting">
-            🧰
-          </span>
-        </div>
-        <div className="message-container">
-          {users.map(({ name, _id, createdAt, message }, index) => {
-            return (
-              <div key={_id} >
-                {<Messagerow name={name} id={_id} message={message}
-                  time={createdAt} />}
-              </div>
-            )
-          })}
-        </div>
+      <div className="header-container">
+        <h2>
+          MESSAGES
+        </h2>
+        <span onClick={e => navigate("/setting")} className="toggleSetting">
+          <FaBars style={{ fontSize: "1.2rem" }} />
+        </span>
+      </div>
+      <div className="message-container"
+
+
+      >
+        {/* <div className="online-container-users">
+          <div className="online-user">
+          </div>
+          <div className="online-user">
+          </div>
+          <div className="online-user">
+          </div>
+          <div className="online-user">
+          </div>
+          <div className="online-user">
+          </div>
+          <div className="online-user">
+          </div>
+          <div className="online-user">
+          </div>
+          </div> */}
+        {users.map(({ name, _id, createdAt, message }, index) => {
+          return (
+            <div key={_id} >
+              {<Messagerow name={name} id={_id} message={message}
+                time={createdAt} typing={typing} />}
+            </div>
+          )
+        })}
+      </div>
 
     </>
   )

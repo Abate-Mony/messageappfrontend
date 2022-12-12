@@ -11,7 +11,9 @@ const Emj = ({ modal,_message }) => {
     <>🥵</>,<>⚽</>,<>🔈</>,<>🔊</>,<>😁</>,<>❤</>,<>💙</>,]
 
     return (
-        <div className={`emj-container ${!modal ? "--d-none" : "verse"}`} onClick={(e) => {
+        <div className={`emj-container 
+        ${!modal ? "--d-none" : "verse"}`}
+         onClick={(e) => {
             return e.stopPropagation()
         }} >
             <div className="mini-emj-container" >

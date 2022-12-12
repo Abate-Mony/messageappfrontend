@@ -1,37 +1,27 @@
 import React from 'react'
 import imgsrc from '../bg-1.jpg'
-import {useState,useEffect} from 'react'
+// import {useState,useEffect} from 'react'
 const User = ({ name, id,createdAt }) => {
-  const [src, setSrc] = useState("")
+  // const [src, setSrc] = useState("")
 
   const handleError = e => {
     e.target.src = imgsrc
   }
-useEffect(() => {
-imageSrc()
+// useEffect(() => {
+// imageSrc()
 
-},[])
+// },[])
 
-async function imageSrc (){
-  const _res=  await fetch("https://messageappalaisah.herokuapp.com/profile/" + id)
-  const {image} = await _res.json()
-  console.log(image)
-  setSrc("https://messageappalaisah.herokuapp.com/profile/image/"+image)
-  console.log(image)
-}
+// async function imageSrc (){
+//   const _res=  await fetch("https://messageappalaisah.herokuapp.com/profile/" + id)
+//   const {image} = await _res.json()
+//   console.log(image)
+//   setSrc("https://messageappalaisah.herokuapp.com/profile/image/"+image)
+//   console.log(image)
+// }
 
 
    function checkUserTime(date){
-
-
-    // const _res=  await fetch("https://messageappalaisah.herokuapp.com/profile/" + id)
-    // const {image} = await _res.json()
-    // console.log(image)
-    // setSrc("https://messageappalaisah.herokuapp.com/profile/image/"+image)
-
-
-
-
 
 
     const milliSeconds=new Date()- new Date(date);
@@ -48,7 +38,7 @@ async function imageSrc (){
     <div className="container" style={{ padding: "0 1rem" }}>
       <div className="user-container">
         <div className="img-container">
-          <img src={src} 
+          <img src={imgsrc} 
           onError={handleError} className="fit-img" alt={"0"} />
         </div>
         <div className="user-details-container">
