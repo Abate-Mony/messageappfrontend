@@ -10,12 +10,14 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { useState } from 'react'
 // const BASE_URL="http://192.168.43.32:5000"
 // const BASE_URL="http://localhost:5000"
-const BASE_URL="http://192.168.43.68:5000"
-
+const BASE_URL = "http://192.168.43.68:5000"
+const url = BASE_URL.slice(4)
+console.log(url)
 function App() {
-    const socketUrl="ws://localhost:5000"
+   
+    const socketUrl = `ws${url}`
     var socket = new WebSocket(socketUrl)
-    if ( sessionStorage.getItem("id")!=null) {
+    if (sessionStorage.getItem("id") != null) {
         socket.onopen = function (e) {
             // console.log(e)
             socket.send(
@@ -26,14 +28,14 @@ function App() {
             socket.send(
                 `user_id___________:${sessionStorage.getItem("id")}`
             )
-            socket =socket = new WebSocket("ws://localhost:5000")
-                //  window.location.reload()
+            socket = socket = new WebSocket(socketUrl)
+            //  window.location.reload()
         }
-      
+
     } else {
         console.log("user is offline")
     }
-   
+
     const [W, setW] = useState(window.innerWidth)
     window.onresize = function () {
         setW(window.innerWidth)
@@ -46,7 +48,7 @@ function App() {
 
                     <Route path='/message/:id' element={<Message socket={socket} BASE_URL={BASE_URL} />}>
                     </Route>
-                    <Route path='/users' element={<Users socket={socket} BASE_URL={BASE_URL}/>}>
+                    <Route path='/users' element={<Users socket={socket} BASE_URL={BASE_URL} />}>
                     </Route>
                     <Route path="setting" element={<Setting socket={socket} BASE_URL={BASE_URL} />}>
                     </Route>
@@ -58,16 +60,16 @@ function App() {
 
                         <Route path='/message/:id' element={<Message socket={socket} BASE_URL={BASE_URL} />}>
                         </Route>
-                        <Route path="setting" element={<Setting socket={socket} BASE_URL={BASE_URL}/>}>
+                        <Route path="setting" element={<Setting socket={socket} BASE_URL={BASE_URL} />}>
                         </Route>
                     </Route>
 
                 </>
                 }
-                <Route path="/auth" element={<SharedLayout  BASE_URL={BASE_URL} /> }>
-                    <Route index element={<Login  BASE_URL={BASE_URL}/>} />
-                    <Route path='login' element={<Login  BASE_URL={BASE_URL}/>} />
-                    <Route path='signup' element={<Signup  BASE_URL={BASE_URL}/>} />
+                <Route path="/auth" element={<SharedLayout BASE_URL={BASE_URL} />}>
+                    <Route index element={<Login BASE_URL={BASE_URL} />} />
+                    <Route path='login' element={<Login BASE_URL={BASE_URL} />} />
+                    <Route path='signup' element={<Signup BASE_URL={BASE_URL} />} />
                 </Route>
                 <Route path="*" element={<div style={{ minHeight: "100vh", backgroundColor: "white" }}>not found</div>}>
                 </Route>

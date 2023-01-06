@@ -1,20 +1,34 @@
 import bg from '../bg-1.jpg'
-
+import {useState} from 'react'
 const Recievemessage = ({message,imgsrc}) => {
-    const BASE_URL ="http://192.168.43.32:5000"
-const BASE_HEROKU_URL="https://messageappal"
-const handleError=e=>{
-    e.target.src= bg
-  console.log("error in retrieving the file !!!")
+const [loading,setLoading]=useState(true)
+  const handleError = e => {
+    e.target.src = bg
+    console.log("image fail to load ")
+    setLoading(false)
 
   }
+  const handleLoading=e=>{
+    console.log(e)
+    console.log("image is loading here ")
+    setLoading(false)
+  }
+
     return (
-        <div className="recieve-message message" onClick={e =>e.target.style.backgroundColor="orange"}>
-            {imgsrc?
-            <img src={imgsrc} alt="mmga" onError={handleError} />
-            :message
-            }
-        </div>
+        <div className="message recieve-message" style={{
+            width: imgsrc && "50%", height: imgsrc && "20rem"
+          }}>
+          {imgsrc?
+              <><div className="img_preloader" style={{
+                display:loading?"block":"none",backgroundColor:"var(--bg-color-1)"
+              }}><span style={{
+                backgroundColor:"var(--bg-color-1)"
+
+              }}></span></div> <img src={imgsrc} onLoad={handleLoading}
+              alt="mmga" onError={handleError} /></>
+                :message
+                }
+          </div>
     )
 }
 

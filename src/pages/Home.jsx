@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import Messagerow from '../components/Messagerow'
 import { useNavigate } from 'react-router-dom'
 import { FaBars } from 'react-icons/fa'
+import { BsFillPlusCircleFill } from 'react-icons/bs'
+import { FiSettings } from 'react-icons/fi'
 
 const Home = ({ socket, BASE_URL, BigMessages, setBigMessages }) => {
   const [typing, setTyping] = useState(false)
@@ -75,21 +77,21 @@ const Home = ({ socket, BASE_URL, BigMessages, setBigMessages }) => {
   return (
     <>
       <div className="add-btn center circle" style={{ width: "50px", height: "50px" }} onClick={e => navigate("/users")}>
-        +
+        <BsFillPlusCircleFill color="white"/>
       </div>
       <div className="header-container">
         <h2>
           MESSAGES
         </h2>
         <span onClick={e => navigate("/setting")} className="toggleSetting">
-          <FaBars style={{ fontSize: "1.2rem" }} />
+          <FiSettings size="1.5rem"  color="orange"/>
         </span>
       </div>
       <div className="message-container"
 
 
       >
-        {/* <div className="online-container-users">
+        {/* <div className="online-container-users" >
           <div className="online-user">
           </div>
           <div className="online-user">

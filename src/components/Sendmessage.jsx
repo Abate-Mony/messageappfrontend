@@ -1,8 +1,19 @@
 import bg from '../bg-1.jpg'
+import {useState,useEffect} from 'react'
+
 const Sendmessage = ({ message, imgsrc, id, setSelectedId, selectedId,del,setDel }) => {
-  const BASE_URL = "http://192.168.43.32:5000"
+const [loading,setLoading]=useState(true)
+
   const handleError = e => {
     e.target.src = bg
+    console.log("image fail to load ")
+    setLoading(false)
+
+  }
+  const handleLoading=e=>{
+    console.log(e)
+    console.log("image is loading here ")
+    setLoading(false)
   }
   function handleSelect(e) {
     console.log(del)
@@ -31,14 +42,19 @@ const Sendmessage = ({ message, imgsrc, id, setSelectedId, selectedId,del,setDel
   }
   return (
     <div className="flex-end" style={{
-      position: "relative", minHeight: imgsrc && "500px"
+      position: "relative"
     }} >
-      <div className="message send-message" onClick={handleSelect}>
-        {imgsrc ?
-          <img src={imgsrc} alt="mmga" onError={handleError} />
-          : message
-
-        }
+      <div className="message send-message" onClick={handleSelect} style={{
+        width: imgsrc && "50%", height: imgsrc && "20rem"
+      }}>
+      {imgsrc?
+          <><div className="img_preloader" style={{
+            display:loading?"block":"none"
+          }}><span></span></div> <img src={imgsrc} onLoad={handleLoading} alt="mmga" onError={handleError} style={{
+            width:`100%`,transform:`scaleX(1.2)`
+          }}/></>
+            :message
+            }
       </div>
     </div>
   )

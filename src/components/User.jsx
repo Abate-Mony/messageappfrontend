@@ -7,18 +7,6 @@ const User = ({ name, id,createdAt }) => {
   const handleError = e => {
     e.target.src = imgsrc
   }
-// useEffect(() => {
-// imageSrc()
-
-// },[])
-
-// async function imageSrc (){
-//   const _res=  await fetch("https://messageappalaisah.herokuapp.com/profile/" + id)
-//   const {image} = await _res.json()
-//   console.log(image)
-//   setSrc("https://messageappalaisah.herokuapp.com/profile/image/"+image)
-//   console.log(image)
-// }
 
 
    function checkUserTime(date){

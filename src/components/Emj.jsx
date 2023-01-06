@@ -1,31 +1,21 @@
-import { useRef, React } from 'react'
+// import { React } from 'react'
+import Picker from 'emoji-picker-react'
 
 const Emj = ({ modal,_message }) => {
-    const doSomething = (e) => {
-        const emj=e.target.textContent;
-        _message.current.value+=emj
-    }
-    const emjs = [<>🧡</>,<>🥶</>,<>🐯</>,<>👩‍❤️‍👩</>,
-    <>👩</>,<>👩‍🚒</>,<>🤶</>,<>👫</>,<>👩🏿</>,<>👩🏼</>,<>👰</>,<>👩🏼</>,<>👩🏼</>,<>👨‍🌾</>,<>👩‍💻</>,
-    <>💖</>,<>🙆‍♂️</>,<>🎅</>,<>👆</>,<>🙋‍♂️</>,<>👂</>,<>👃</>,<>🦻</>,<>👂</>,<>🦶</>,<>🦻</>,<>😡</>,<>👖</>,<>🩳</>,<>🐱‍🚀</>,
-    <>🥵</>,<>⚽</>,<>🔈</>,<>🔊</>,<>😁</>,<>❤</>,<>💙</>,]
-
+   const onEmojiClick=(event,emojiObj)=>{
+    console.log(emojiObj.emoji)
+    // alert(Object.values(emojiObj))
+    _message.current.value+=emojiObj.emoji
+   }
     return (
-        <div className={`emj-container 
-        ${!modal ? "--d-none" : "verse"}`}
+        <span className={`emj-container 
+        ${!modal ? "--d-none" : "----"}`}
          onClick={(e) => {
             return e.stopPropagation()
         }} >
-            <div className="mini-emj-container" >
-                {emjs.map((emj, index) => {
-                    return (
-                        <span key={index} onClick={doSomething}>
-                            {emj}
-                        </span>
-                    )
-                })}
-            </div>
-        </div>
+            <Picker onEmojiClick={onEmojiClick} width={"100%"} 
+            height={"100%"} />
+        </span>
     )
 }
 

@@ -1,4 +1,6 @@
 import { useRef } from 'react'
+import {TfiClose} from 'react-icons/tfi'
+
 const Upload = ({ toggle, setToggle, sentTo, getData,socket }) => {
     const BASE_URL ="http://192.168.43.32:5000"
 const BASE_HEROKU_URL="https://messageappal"
@@ -49,7 +51,7 @@ const createdBy = sessionStorage.getItem("id")
 
     return (
         <div className={`upload-container ${!toggle && "--d-none"}`}>
-            <span className="remove-btn" onClick={e => setToggle(false)}>X</span>
+            <span className="remove-btn" onClick={e => setToggle(false)}><TfiClose size="1.5rem" scale={4} style={{fontWeight:700}} /></span>
             <form encType="multipart/form-data"
                 className="signup-container" ref={form} onSubmit={handleSubmit}>
                 <input type="file" name="file" id="upload_file" accept={"image/*"} required={true} />

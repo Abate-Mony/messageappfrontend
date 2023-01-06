@@ -3,12 +3,10 @@ import User from '../components/User'
 import { useNavigate } from 'react-router-dom'
 import PulseUser from '../components/PulseUser'
 import Notification from '../components/Notification'
-import axios from 'axios'
-import {FaArrowLeft} from 'react-icons/fa'
-// import FontAwesomeIcon from "react-icons/fa"
+import {CiSearch,CiCircleRemove} from 'react-icons/ci'
+import {RiSettings2Fill} from 'react-icons/ri'
+import {AiFillHome} from 'react-icons/ai'
 const Users = ({socket,BASE_URL }) => {
-  // const BASE_URL ="http://192.168.43.32:5000"
-// const BASE_HEROKU_URL="https://messageappal"
   const [incomingmessage, setIncomingMessage] = useState(false)
   const [incomingInfo, setInComingInfo] = useState([])
   const createdBy = sessionStorage.getItem("id")
@@ -109,10 +107,10 @@ const [isLoading, setisLoading] = useState(true)
       <Notification incomingmessage={incomingmessage} incomingInfo={incomingInfo}/>
       <div className="navigate-user">
         <div className="back" onClick={e => navigate("/")}>
-        {/* <FontAwesomeIcon icon="fa-solid fa-magnifying-glass" /> */}
+        <AiFillHome />
         </div>
         <div className="right" onClick={e => navigate("/setting")}>
-          ⚙
+          <RiSettings2Fill/>
         </div>
       </div>
       <div className="header" style={{
@@ -122,7 +120,7 @@ const [isLoading, setisLoading] = useState(true)
         
         <div className="input-searchusers"  >
           <span onClick={handleSearch} >
-            🔍
+            <CiSearch style={{marginLeft:"0.6rem"}} size="1.5rem"/>
           </span>
           <input type="text" id="__search"
             autoComplete="false"
@@ -141,9 +139,7 @@ const [isLoading, setisLoading] = useState(true)
             search.current.value = ""]
           }
           >
-            {/* <FaArrowLeft style={{
-              fontSize: "1.2rem", marginRight:"0.6rem"
-            }}/> */}
+<CiCircleRemove style={{marginLeft:"0.6rem"}} size="1.5rem"/>
           </span>
         </div>
 

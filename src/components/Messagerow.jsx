@@ -1,23 +1,34 @@
 import imgsrc from '../bg-1.jpg'
 import { useNavigate } from 'react-router-dom'
-// import { useState, useEffect} from 'react'
+import { useState, useEffect} from 'react'
 const Messagerow = ({ name, id, message, time }) => {
-  // const [src, setSrc] = useState("")
-  
-    
-    
+
+    const [loading , setLoading]=useState(true)
+const letterName=names=>names.split(" ").map((name)=>name[0]).join("").toUpperCase() 
   const navigate = useNavigate()
     const date = new Date(time).toLocaleDateString()
     const hour = new Date(time).toLocaleTimeString()
     const handleError = e => {
-        e.target.src = imgsrc
+        console.log("sme errr os")
+        window.setTimeout(()=>{
+            e.target.src = imgsrc
+        setLoading(false)
+
+        },5000)
     }
     return (
         <div className="messagebox" style={{ backgroundColor: "white" }}>
-            <div className="message-img center">
-                <img src={imgsrc} onError={handleError}
+            <div className="message-img center" style={{
+                overflow:"hidden",zIndex:5
+            }}>
+            <div className="img_preloader" style={{
+            display:loading?"flex":"none",backgroundColor:"white",
+            borderRadius:"50%",border: "0.125rem solid var(--bg-color-1)",zIndex:4,height:"100%",width:"100%",alignItems:"center",justifyContent:"center"
+          }}>{letterName(name)}</div>
+                <img src={"http"} onError={handleError}
                     className="fit-img circle"
-                     style={{ width: 50 + "px", height: 50 + "px" }} alt={"rose are red"} />
+                     style={{ width: "100%", height: "100%",objectFit:"cover",position:"absolute",top:0,left:0}}
+                      alt={"rose are red"} />
             </div>
 
             <div className="message_right" onClick={e => {

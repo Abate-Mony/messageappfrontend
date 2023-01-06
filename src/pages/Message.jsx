@@ -3,17 +3,21 @@ import Sendmessage from '../components/Sendmessage'
 import Recievemessage from '../components/Recievemessage'
 import { useNavigate, useParams } from 'react-router-dom'
 import Emj from '../components/Emj'
-import MoreOpton from '../components/MoreOpton'
+// import MoreOpton from '../components/MoreOpton'
 import Animationpic from '../components/Animationpic'
 import Upload from '../components/Upload'
 import DateFormater from '../components/DateFormater'
 import Notification from '../components/Notification'
 import imgsrc from '../bg-1.jpg'
-import { FaArrowLeft, FaChevronLeft, FaAngleDown, FaAngleUp } from 'react-icons/fa'
+import { FaChevronLeft, FaAngleDown, FaAngleUp } from 'react-icons/fa'
+import { IoMdSend} from 'react-icons/io'
+import { VscChevronLeft} from 'react-icons/vsc'
+import { FcAddImage} from 'react-icons/fc'
+import { MdOutlineKeyboardArrowDown,MdOutlineKeyboardArrowUp} from 'react-icons/md'
 import sound from '../1.wav'
+import Picker from 'emoji-picker-react'
 const Message = ({ socket, BASE_URL }) => {
 
-  // const [src, setSrc] = useState("")
 
   const [typing, setTyping] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -32,7 +36,7 @@ const Message = ({ socket, BASE_URL }) => {
   const token = sessionStorage.getItem("token")
   const [del, setDel] = useState(false)
   const slider = useRef(null)
-  // const file = useRef(null)
+  const file = useRef(null)
   const fileContainer = useRef(null)
   const [timer, setTimer] = useState(null)
   const indicator = useRef(null)
@@ -42,14 +46,8 @@ const Message = ({ socket, BASE_URL }) => {
   const [incomingmessage, setIncomingMessage] = useState(false)
   const [incomingInfo, setInComingInfo] = useState("")
   const [selectedId, setSelectedId] = useState([])
-  // const parentContainer=useRef(null)
-  function handleSelect(e) {
-    e.stopPropagation()
-    // const elmSelected=e.target
-    // console.log(e.target.innerHTML)
-    // elmSelected.style.backgroundColor="orange"
-    // e.preventDefault()
-  }
+  const parentContainer=useRef(null)
+  
   useEffect(() => {
     if (del) {
       slider.current.style.left = 0
@@ -233,7 +231,6 @@ const Message = ({ socket, BASE_URL }) => {
   }
   const handleMouseup = e => {
     clearTimeout(timer)
-    // console.log("clearing timeout")
     e.stopPropagation()
   }
   function isOpen(ws) { return ws.readyState === ws.OPEN }
@@ -241,15 +238,7 @@ const Message = ({ socket, BASE_URL }) => {
     socket.send(sn + "|" + cb)
   }
   const handleDeleteAll = async (e) => {
-    // var tempMessages = __messages
-    // let i = 0
-    // for (i = 0; i < tempMessages.length; i++) {
-    //   for (let j = 0; j < selectedId.length; ++j) {
-    //     if (tempMessages[i]._id == selectedId[j]) {
-    //       tempMessages.splice(i, 1)
-    //     }
-    //   }
-    // }
+   
 
       const res=await fetch(BASE_URL + "/message",{
         method:"delete",
@@ -414,20 +403,20 @@ const Message = ({ socket, BASE_URL }) => {
       <span className="scrollto bottm"
         onClick={e => scrollMessageBox()}
         ref={scrollbottom}>
-        <FaAngleDown style={{ color: "var(--bg-color-1)", fontSize: "3rem" }} />
+        <MdOutlineKeyboardArrowDown style={{ color: "var(--bg-color-1)", fontSize: "3rem" }} />
       </span>
       <span className="scrollto top"
         onClick={e => scrollMessageBox(0)}
         ref={scrolltop}>
-        <FaAngleUp style={{ color: "var(--bg-color-1)", fontSize: "3rem" }} />
+        <MdOutlineKeyboardArrowUp style={{ color: "var(--bg-color-1)", fontSize: "3rem" }} />
 
       </span>
 
       <Notification incomingmessage={incomingmessage} incomingInfo={incomingInfo} />
       <Upload toggle={toggleFile} setToggle={setToggleFile} sentTo={sentTo} getData={getData} socket={socket} />
-
+{/* 
       <MoreOpton mousedown={mousedown} message={info} setMousedown={setMousedown} 
-      BASE_URL={BASE_URL} getData={getData} del={del} setDel={setDel} />
+      BASE_URL={BASE_URL} getData={getData} del={del} setDel={setDel} /> */}
       <Animationpic toggle={profile} setToggle={setProfile} src={imgsrc} />
       <div className="message-inner-chart-header">
         <span className="slide_del" ref={slider}>
@@ -438,7 +427,7 @@ const Message = ({ socket, BASE_URL }) => {
         </span>
         <span className="scrollindicator" ref={indicator}></span>
         <span onClick={e => navigate("/")} className="backBtn">
-          <FaChevronLeft style={{ fontSize: "1.5rem" }} />
+          <VscChevronLeft style={{ fontSize: "2rem" }} />
         </span>
         <div className="--name-container">
           <h2>{name}</h2>
@@ -464,7 +453,8 @@ const Message = ({ socket, BASE_URL }) => {
       <div className="message-inner-chart-box"
         style={{ backgroundColor: "white", position: "relative" }}
         ref={messageBox} onScroll={myFunction}>
-        {__messages.length > 0 ? __messages?.map(alignMessages) : <div id="hi-btn" style={{ color: "white" }} onClick={e =>
+        {__messages.length > 0 ? __messages?.map(alignMessages) :
+        <div id="hi-btn" style={{ color: "white" }} onClick={e =>
           [_message.current.value = "Hi 🙋‍♂️", sendMessage()]
         }>Tap to Say Hi</div>}
       </div>
@@ -484,14 +474,16 @@ const Message = ({ socket, BASE_URL }) => {
         }}>😊</div>
         <input type="text"
           placeholder="hey,press enter to send"
-          style={{ outline: "none" }} ref={_message} onKeyUp={handleToggleFile} autoFocus={true} />
-        {/* <div className="file-btn" ref={file} onClick={e => setToggleFile(true)}>
-          ()
-        </div> */}
+          style={{ outline: "none" }} ref={_message} onKeyUp={handleToggleFile}
+          //  autoFocus={true} 
+           />
+        <div className="file-btn" ref={file} onClick={e => setToggleFile(true)}>
+          <FcAddImage/>
+        </div>
         <div className="send_" style={{ color: "orange", textAlign: "left" }} onClick={e => {
           sendMessage()
         }} >
-          send
+          <IoMdSend size="1.5rem" style={{color:"white"}}  color="white"/>
         </div>
       </div>
     </div> : <div className={`loader-container`} style={{

@@ -1,5 +1,9 @@
 import React from 'react'
 import {useState,useEffect} from 'react'
+import {VscArrowLeft,VscCopy} from 'react-icons/vsc'
+import {IoMdTrash} from 'react-icons/io'
+import {BiSelectMultiple} from 'react-icons/bi'
+import {RiShareForwardFill} from 'react-icons/ri'
 const MoreOpton = ({ mousedown
   , message: { message, _id, createdAt, createdBy }, setMousedown, BASE_URL, getData ,del,setDel}) => {
   const time = new Date(createdAt)
@@ -81,22 +85,22 @@ function copyTextToClipboard(text) {
       <div className="top-bar"
         onClick={e => e.stopPropagation()}>
         <span onClick={e => setMousedown(!mousedown)}>
-          --
+        <VscArrowLeft/>
         </span>
         <div>
           <span className="delBtn" style={{
           display:createdBy !== myId?"none":"block"
           }} onClick={e => handleDeleteMessage(_id)}>
-            o
+            <IoMdTrash/>
           </span>
           <span className="copy">
-            l
+            <RiShareForwardFill/>
           </span>
           <span className="copy" onClick={e =>copyTextToClipboard(message)}>
-            /
+          <VscCopy/>
           </span>
           <span className="copy" onClick={e =>handleDeleteMultiple()}>
-          ||
+          <BiSelectMultiple/>
           </span>
 
         </div>
