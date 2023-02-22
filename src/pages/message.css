@@ -1,0 +1,48 @@
+.message__typing {
+    /* border: 1px solid orange; */
+    padding: 0.4rem;
+    display: flex;
+    font-size: 0.8rem;
+}
+
+.message__typing span {
+    margin-left: 0.1rem;
+}
+
+.message__typing span>* {
+    --w: 7px;
+    width: var(--w);
+    height: var(--w);
+    border-radius: 50%;
+    background: var(--bg-color-1, green);
+    margin-left: 0.2rem;
+    display: inline-block;
+    animation: slideupdown 0.6s infinite forwards;
+}
+
+.message__typing span>*:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.message__typing span>*:nth-child(3) {
+    animation-delay: 0.1s;
+}
+
+.message__typing span>*:nth-child(4) {
+    animation-delay: 0.2s;
+}
+
+@keyframes slideupdown {
+    /* from {
+        transform: translateY(0);
+    } */
+    40% {
+        transform: translateY(6px);
+    }
+    70% {
+        transform: translateY(0px);
+    }
+    to {
+        transform: translateY(-6px);
+    }
+}

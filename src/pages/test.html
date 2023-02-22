@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>testing images event</title>
+    <!-- <link rel="stylesheet" href="../b"> -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            width: 100vw;
+            border: 1px solid green;
+        }
+        
+        .img {
+            width: 100px;
+            height: 200px;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <img src="../bg-1.jpg" class="img img1" alt="">
+    <img src="../bg-1.jpg" class="img img2" alt="">
+    <script>
+        const [img1, img2] = [...document.querySelectorAll("img")]
+        console.log(img2)
+        img2.addEventListener("click", e => {
+            // console.log("hello i was clickwhen the ")
+        })
+        img2.addEventListener("load", e => {
+            console.log(e)
+                // alert(e.target.classList[0])
+        })
+    </script>
+</body>
+
+</html>
